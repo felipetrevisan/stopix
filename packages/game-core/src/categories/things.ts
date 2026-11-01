@@ -1,7 +1,7 @@
 import { type Category, words } from "./types";
 
 export const OBJECTS: Category = {
-  id: "objetos",
+  id: "objects",
   name: "Objetos",
   emoji: "📦",
   ask: "um objeto",
@@ -33,7 +33,7 @@ export const OBJECTS: Category = {
 };
 
 export const BODY: Category = {
-  id: "corpo",
+  id: "body",
   name: "Partes do corpo",
   emoji: "💪",
   ask: "uma parte do corpo",
@@ -62,7 +62,7 @@ export const BODY: Category = {
 };
 
 export const SPORTS: Category = {
-  id: "esportes",
+  id: "sports",
   name: "Esportes",
   emoji: "⚽",
   ask: "um esporte",
@@ -95,7 +95,7 @@ export const SPORTS: Category = {
 };
 
 export const INSTRUMENTS: Category = {
-  id: "instrumentos",
+  id: "instruments",
   name: "Instrumentos musicais",
   emoji: "🎸",
   ask: "um instrumento musical",
@@ -125,7 +125,7 @@ export const INSTRUMENTS: Category = {
 };
 
 export const CLOTHES: Category = {
-  id: "roupas",
+  id: "clothes",
   name: "Roupas e acessórios",
   emoji: "👕",
   ask: "uma roupa ou acessório",
@@ -154,7 +154,7 @@ export const CLOTHES: Category = {
 };
 
 export const COLORS: Category = {
-  id: "cores",
+  id: "colors",
   name: "Cores",
   emoji: "🎨",
   ask: "uma cor",

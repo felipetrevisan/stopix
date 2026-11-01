@@ -54,32 +54,32 @@ describe("palavras", () => {
   });
 
   test("aceita variações da mesma resposta", () => {
-    expect(matchAnswer("frutas", "G", "goiaba")?.word).toBe("goiaba");
-    expect(matchAnswer("frutas", "G", "GOIABA!!")?.word).toBe("goiaba");
-    expect(matchAnswer("frutas", "G", "uma goiaba 😋")?.word).toBe("goiaba");
-    expect(matchAnswer("frutas", "G", "goiabas")?.word).toBe("goiaba");
-    expect(matchAnswer("frutas", "M", "maracuja")?.word).toBe("maracujá");
-    expect(matchAnswer("frutas", "F", "fruta do conde")?.word).toBe("fruta-do-conde");
-    expect(matchAnswer("frutas", "L", "limões")?.word).toBe("limão");
-    expect(matchAnswer("animais", "L", "leões")?.word).toBe("leão");
-    expect(matchAnswer("doces", "R", "romeu e julieta")?.word).toBe("romeu e julieta");
+    expect(matchAnswer("fruits", "G", "goiaba")?.word).toBe("goiaba");
+    expect(matchAnswer("fruits", "G", "GOIABA!!")?.word).toBe("goiaba");
+    expect(matchAnswer("fruits", "G", "uma goiaba 😋")?.word).toBe("goiaba");
+    expect(matchAnswer("fruits", "G", "goiabas")?.word).toBe("goiaba");
+    expect(matchAnswer("fruits", "M", "maracuja")?.word).toBe("maracujá");
+    expect(matchAnswer("fruits", "F", "fruta do conde")?.word).toBe("fruta-do-conde");
+    expect(matchAnswer("fruits", "L", "limões")?.word).toBe("limão");
+    expect(matchAnswer("animals", "L", "leões")?.word).toBe("leão");
+    expect(matchAnswer("sweets", "R", "romeu e julieta")?.word).toBe("romeu e julieta");
   });
 
   test("um erro de digitação passa em palavra grande, se só uma servir", () => {
-    expect(matchAnswer("frutas", "G", "graviloa")?.word).toBe("graviola");
-    expect(matchAnswer("frutas", "G", "goiba")).toBeNull(); // curta demais
+    expect(matchAnswer("fruits", "G", "graviloa")?.word).toBe("graviola");
+    expect(matchAnswer("fruits", "G", "goiba")).toBeNull(); // curta demais
   });
 
   test("recusa letra errada, outra categoria, frase e link", () => {
-    expect(matchAnswer("frutas", "G", "banana")).toBeNull();
-    expect(matchAnswer("frutas", "G", "gato")).toBeNull();
-    expect(matchAnswer("frutas", "G", "goiaba é a melhor fruta do mundo")).toBeNull();
-    expect(matchAnswer("frutas", "G", "goiaba.com/123")).toBeNull();
+    expect(matchAnswer("fruits", "G", "banana")).toBeNull();
+    expect(matchAnswer("fruits", "G", "gato")).toBeNull();
+    expect(matchAnswer("fruits", "G", "goiaba é a melhor fruta do mundo")).toBeNull();
+    expect(matchAnswer("fruits", "G", "goiaba.com/123")).toBeNull();
   });
 
   test("também valia vem da mesma letra", () => {
-    expect(wordsFor("frutas", "G")).toContain("graviola");
-    expect(wordsFor("frutas", "G").every((word) => normalizeKey(word).startsWith("g"))).toBe(true);
+    expect(wordsFor("fruits", "G")).toContain("graviola");
+    expect(wordsFor("fruits", "G").every((word) => normalizeKey(word).startsWith("g"))).toBe(true);
   });
 });
 
@@ -111,14 +111,14 @@ describe("rodada", () => {
   });
 
   test("só sorteia as categorias escolhidas", () => {
-    const options = { ...DEFAULT_OPTIONS, categories: ["animais"] };
+    const options = { ...DEFAULT_OPTIONS, categories: ["animals"] };
     for (let i = 0; i < 10; i += 1) {
-      expect(drawRound(1, [], null, options, seeded(i + 1)).categoryId).toBe("animais");
+      expect(drawRound(1, [], null, options, seeded(i + 1)).categoryId).toBe("animals");
     }
   });
 
   test("pontos: primeira 150, nova 100, repetida 50; uma por pessoa", () => {
-    let state = playing("frutas", "G");
+    let state = playing("fruits", "G");
     const send = (id: string, text: string, at = 1) => {
       const result = submitAnswer(state, player(id), text, at);
       state = result.state;
@@ -142,7 +142,7 @@ describe("rodada", () => {
   });
 
   test("avisa quando alguém passa outro no placar", () => {
-    let state = playing("frutas", "G");
+    let state = playing("fruits", "G");
     state = submitAnswer(state, player("ana"), "goiaba", 1).state; // 150
     state = submitAnswer(state, player("bia"), "graviola", 2).state; // 100
     state = { ...state, round: { ...state.round, answers: [] } };
@@ -166,7 +166,7 @@ describe("rodada", () => {
   });
 
   test("resposta fora do tempo não vale", () => {
-    const state = playing("frutas", "G");
+    const state = playing("fruits", "G");
     expect(submitAnswer(state, player("ana"), "goiaba", 31_000).outcome.type).toBe("ignored");
   });
 });
@@ -211,7 +211,7 @@ describe("fases", () => {
 
   test("pular troca a rodada e devolve os pontos dela", () => {
     const rng = seeded(9);
-    let state = playing("frutas", "G");
+    let state = playing("fruits", "G");
     state = submitAnswer(state, player("ana"), "goiaba", 1).state;
     state = skip(state, 2, DEFAULT_OPTIONS, rng);
     expect(state.phase).toBe("drawing");
@@ -230,10 +230,10 @@ describe("fases", () => {
 
 describe("cultura pop", () => {
   test("artigo no começo não conta e número é ignorado", () => {
-    expect(matchAnswer("filmes", "R", "o rei leão")?.word).toBe("Rei Leão");
-    expect(matchAnswer("jogos", "G", "gta 5")?.word).toBe("GTA");
-    expect(matchAnswer("desenhos", "S", "os simpsons")?.word).toBe("Simpsons");
-    expect(matchAnswer("marcas", "M", "mcdonalds")?.word).toBe("McDonald's");
-    expect(matchAnswer("jogos", "G", "goiaba.com/123")).toBeNull();
+    expect(matchAnswer("movies", "R", "o rei leão")?.word).toBe("Rei Leão");
+    expect(matchAnswer("games", "G", "gta 5")?.word).toBe("GTA");
+    expect(matchAnswer("cartoons", "S", "os simpsons")?.word).toBe("Simpsons");
+    expect(matchAnswer("brands", "M", "mcdonalds")?.word).toBe("McDonald's");
+    expect(matchAnswer("games", "G", "goiaba.com/123")).toBeNull();
   });
 });

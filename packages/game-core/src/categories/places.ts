@@ -1,7 +1,7 @@
 import { type Category, words } from "./types";
 
 export const COUNTRIES: Category = {
-  id: "paises",
+  id: "countries",
   name: "Países",
   emoji: "🌎",
   ask: "um país",
@@ -33,7 +33,7 @@ export const COUNTRIES: Category = {
 };
 
 export const CITIES: Category = {
-  id: "cidades",
+  id: "cities",
   name: "Cidades do Brasil",
   emoji: "🏙️",
   ask: "uma cidade do Brasil",

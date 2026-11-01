@@ -24,7 +24,7 @@ export type PartySettings = {
 };
 
 export const DEFAULT_PARTY_SETTINGS: PartySettings = {
-  categories: ["nomes", "animais", "frutas", "paises", "cores", "objetos"],
+  categories: ["names", "animals", "fruits", "countries", "colors", "objects"],
   rounds: 5,
   roundSec: 90,
   hardLetters: false,

@@ -13,7 +13,7 @@ Stop (adedonha) em dois modos:
 ## Modo amigos
 
 1. O anfitrião cria a sala em `/` e escolhe categorias (3 a 10), rodadas e tempo.
-2. Os amigos entram com o código ou pelo link `/sala/{código}`.
+2. Os amigos entram com o código ou pelo link `/room/{código}`.
 3. **Sorteio** da letra → **folha** com uma casa por categoria (o botão STOP só libera
    com tudo preenchido; dá para ver quantas casas cada um já preencheu, não o que escreveu).
 4. **STOP!** (ou acaba o tempo) → **conferência**: palavra que está nas listas do Stopix
@@ -110,8 +110,9 @@ lista em `features/live/gift-catalog.ts`); no painel o streamer escolhe pela ima
 presente fora dessa lista pode ser escrito pelo nome e usa a imagem que o Neon já viu na
 live (`channels/{código}/gifts`).
 
-Opções na URL: `presentes=0` desliga; `p_tempo`, `p_congelar`, `p_letra`, `p_categoria`,
-`p_dobro` trocam o presente; `seg_tempo` e `seg_congelar` mudam os segundos.
+Opções na URL: `gifts=0` desliga; `gift_time`, `gift_freeze`, `gift_letter`,
+`gift_category`, `gift_double` trocam o presente; `time_bonus` e `freeze_time` mudam os
+segundos.
 
 ### Páginas
 
@@ -121,8 +122,9 @@ Opções na URL: `presentes=0` desliga; `p_tempo`, `p_congelar`, `p_letra`, `p_c
   O palco tem 540 × 960 e escala para caber na fonte.
 - `/live/demo`: overlay com chat simulado, para testar sem live.
 
-Opções na URL do overlay: `tempo`, `rodadas`, `intervalo`, `categorias=frutas,animais`,
-`dificeis=1`, `admins=@a,@b`, `som=0`, `volume=0-100`, `fundo=transparente`.
+Opções na URL do overlay: `round_time`, `rounds`, `break`, `categories=fruits,animals`,
+`hard_letters=1`, `admins=@a,@b`, `sound=0`, `volume=0-100`, `background=transparent`.
+Os ids das categorias estão em `packages/game-core/src/categories` (campo `id`).
 
 O estado da partida fica no `localStorage` do navegador da live, então recarregar a fonte
 retoma a mesma partida.

@@ -1,7 +1,7 @@
 import { type Category, words } from "./types";
 
 export const FRUITS: Category = {
-  id: "frutas",
+  id: "fruits",
   name: "Frutas",
   emoji: "🍓",
   ask: "uma fruta",
@@ -33,7 +33,7 @@ export const FRUITS: Category = {
 };
 
 export const SWEETS: Category = {
-  id: "doces",
+  id: "sweets",
   name: "Doces e sobremesas",
   emoji: "🍰",
   ask: "um doce ou sobremesa",
@@ -64,7 +64,7 @@ export const SWEETS: Category = {
 };
 
 export const DISHES: Category = {
-  id: "comidas",
+  id: "dishes",
   name: "Comidas",
   emoji: "🍔",
   ask: "uma comida",
@@ -98,7 +98,7 @@ export const DISHES: Category = {
 };
 
 export const VEGETABLES: Category = {
-  id: "legumes",
+  id: "vegetables",
   name: "Legumes e verduras",
   emoji: "🥕",
   ask: "um legume ou verdura",
@@ -131,7 +131,7 @@ export const VEGETABLES: Category = {
 };
 
 export const DRINKS: Category = {
-  id: "bebidas",
+  id: "drinks",
   name: "Bebidas",
   emoji: "🥤",
   ask: "uma bebida",

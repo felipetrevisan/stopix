@@ -50,7 +50,7 @@ export function Home() {
       const clean = { ...profile, name: profile.name.trim() };
       saveProfile(clean);
       const room = await createRoom(clean);
-      router.push(`/sala/${room}`);
+      router.push(`/room/${room}`);
     } catch (cause) {
       console.error(cause);
       setError("Não deu para criar a sala. Confira a conexão e tente de novo.");
@@ -61,7 +61,7 @@ export function Home() {
   const enter = () => {
     if (!isRoomCode(code)) return;
     if (named) saveProfile({ ...profile, name: profile.name.trim() });
-    router.push(`/sala/${code}`);
+    router.push(`/room/${code}`);
   };
 
   return (

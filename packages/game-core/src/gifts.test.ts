@@ -22,7 +22,7 @@ const playing = (now = 0): GameState => ({
   ...createGame(now, DEFAULT_OPTIONS, rng),
   phase: "playing",
   phaseEndsAt: now + 30_000,
-  round: { number: 1, categoryId: "frutas", letter: "G", answers: [] },
+  round: { number: 1, categoryId: "fruits", letter: "G", answers: [] },
 });
 
 const gift = (state: GameState, effect: Parameters<typeof applyGift>[1], count = 1, now = 0) =>
@@ -52,10 +52,10 @@ describe("presentes", () => {
     let state = submitAnswer(playing(), player("ana"), "goiaba", 1).state;
     state = gift(state, "letter", 3, 2).state;
     expect(state.round.letter).not.toBe("G");
-    expect(state.round.categoryId).toBe("frutas");
+    expect(state.round.categoryId).toBe("fruits");
     expect(boardAnswers(state.round)).toEqual([]);
     expect(state.scores.ana.points).toBe(POINTS.first);
-    const word = wordsFor("frutas", state.round.letter)[0];
+    const word = wordsFor("fruits", state.round.letter)[0];
     const again = submitAnswer(state, player("ana"), word, 3);
     expect(again.outcome.type).toBe("accepted");
     expect(again.state.scores.ana.points).toBe(POINTS.first * 2);
@@ -64,7 +64,7 @@ describe("presentes", () => {
   test("troca a categoria e garante tempo para responder", () => {
     const late = { ...playing(), phaseEndsAt: 2000 };
     const { state } = gift(late, "category", 1, 1000);
-    expect(state.round.categoryId).not.toBe("frutas");
+    expect(state.round.categoryId).not.toBe("fruits");
     expect(state.phaseEndsAt).toBe(1000 + GIFT_LIMITS.minAfterSwapMs);
   });
 

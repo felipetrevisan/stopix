@@ -1,7 +1,7 @@
 import { type Category, words } from "./types";
 
 export const ANIMALS: Category = {
-  id: "animais",
+  id: "animals",
   name: "Animais",
   emoji: "🐾",
   ask: "um animal",
@@ -36,7 +36,7 @@ export const ANIMALS: Category = {
 };
 
 export const FLOWERS: Category = {
-  id: "flores",
+  id: "flowers",
   name: "Flores e plantas",
   emoji: "🌻",
   ask: "uma flor ou planta",

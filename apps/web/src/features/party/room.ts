@@ -92,8 +92,8 @@ export const toDb = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
 export type Profile = { name: string; avatar: string };
 
-const PROFILE_KEY = "stopix:perfil";
-const SETTINGS_KEY = "stopix:sala";
+const PROFILE_KEY = "stopix:profile";
+const SETTINGS_KEY = "stopix:room-settings";
 
 export const readProfile = (): Profile | null => {
   try {

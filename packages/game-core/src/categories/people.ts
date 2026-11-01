@@ -1,7 +1,7 @@
 import { type Category, words } from "./types";
 
 export const NAMES: Category = {
-  id: "nomes",
+  id: "names",
   name: "Nomes",
   emoji: "🙋",
   ask: "um nome de pessoa",
@@ -36,7 +36,7 @@ export const NAMES: Category = {
 };
 
 export const JOBS: Category = {
-  id: "profissoes",
+  id: "jobs",
   name: "Profissões",
   emoji: "👷",
   ask: "uma profissão",

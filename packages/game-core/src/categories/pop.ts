@@ -5,7 +5,7 @@ import { type Category, words } from "./types";
 // ("GTA", "LoL"); número na resposta é ignorado ("GTA 5" vale como "GTA").
 
 export const GAMES: Category = {
-  id: "jogos",
+  id: "games",
   name: "Jogos",
   emoji: "🎮",
   ask: "um jogo",
@@ -40,7 +40,7 @@ export const GAMES: Category = {
 };
 
 export const MOVIES: Category = {
-  id: "filmes",
+  id: "movies",
   name: "Filmes",
   emoji: "🎬",
   ask: "um filme",
@@ -107,7 +107,7 @@ export const SERIES: Category = {
 };
 
 export const CARTOONS: Category = {
-  id: "desenhos",
+  id: "cartoons",
   name: "Desenhos",
   emoji: "🦄",
   ask: "um desenho",
@@ -141,7 +141,7 @@ export const CARTOONS: Category = {
 };
 
 export const HEROES: Category = {
-  id: "herois",
+  id: "heroes",
   name: "Heróis e vilões",
   emoji: "🦸",
   ask: "um herói ou vilão",
@@ -175,7 +175,7 @@ export const HEROES: Category = {
 };
 
 export const TEAMS: Category = {
-  id: "times",
+  id: "teams",
   name: "Times de futebol",
   emoji: "⚽",
   ask: "um time de futebol",
@@ -207,7 +207,7 @@ export const TEAMS: Category = {
 };
 
 export const BRANDS: Category = {
-  id: "marcas",
+  id: "brands",
   name: "Marcas",
   emoji: "🏷️",
   ask: "uma marca",
@@ -242,7 +242,7 @@ export const BRANDS: Category = {
 };
 
 export const MUSIC: Category = {
-  id: "musica",
+  id: "music",
   name: "Cantores e bandas",
   emoji: "🎤",
   ask: "um cantor, cantora ou banda",
@@ -277,7 +277,7 @@ export const MUSIC: Category = {
 };
 
 export const SOAPS: Category = {
-  id: "novelas",
+  id: "soaps",
   name: "Novelas",
   emoji: "💔",
   ask: "uma novela",

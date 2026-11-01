@@ -53,7 +53,7 @@ function Stepper({
 
 function Invite({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
-  const url = typeof window === "undefined" ? "" : `${window.location.origin}/sala/${code}`;
+  const url = typeof window === "undefined" ? "" : `${window.location.origin}/room/${code}`;
   const share = async () => {
     const text = `Bora jogar Stop? Entra na minha sala do Stopix: ${url}`;
     if (navigator.share) {

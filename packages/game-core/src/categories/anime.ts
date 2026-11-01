@@ -38,7 +38,7 @@ export const POKEMON: Category = {
 };
 
 export const ANIMES: Category = {
-  id: "animes",
+  id: "anime",
   name: "Animes",
   emoji: "🍥",
   ask: "um anime",
@@ -70,7 +70,7 @@ export const ANIMES: Category = {
 };
 
 export const ANIME_CHARACTERS: Category = {
-  id: "personagens-anime",
+  id: "anime-characters",
   name: "Personagens de anime",
   emoji: "🗡️",
   ask: "um personagem de anime",

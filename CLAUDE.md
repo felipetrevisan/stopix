@@ -10,4 +10,6 @@
   README. Produtos que o usuário usa de verdade (Neon Live Labs, TikTok LIVE Studio,
   OBS) podem aparecer nas instruções do painel da live.
 - Textos da interface em português do Brasil.
+- **Termos técnicos em inglês:** rotas e parâmetros de URL, ids (categorias, efeitos),
+  chaves de armazenamento, nomes de branch e mensagens de commit sempre em inglês.
 - Rodar `bun run check` antes de commitar.

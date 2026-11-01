@@ -4,7 +4,7 @@ import { type Category, words } from "./types";
 // número é ignorado, como nas outras categorias de títulos.
 
 export const CHARACTERS: Category = {
-  id: "personagens",
+  id: "characters",
   name: "Personagens",
   emoji: "🧸",
   ask: "um personagem",
@@ -38,7 +38,7 @@ export const CHARACTERS: Category = {
 };
 
 export const CREATORS: Category = {
-  id: "youtubers",
+  id: "creators",
   name: "Youtubers e streamers",
   emoji: "📹",
   ask: "um youtuber ou streamer",
@@ -69,7 +69,7 @@ export const CREATORS: Category = {
 };
 
 export const PLAYERS: Category = {
-  id: "jogadores",
+  id: "players",
   name: "Jogadores de futebol",
   emoji: "👟",
   ask: "um jogador de futebol",
@@ -103,7 +103,7 @@ export const PLAYERS: Category = {
 };
 
 export const CELEBRITIES: Category = {
-  id: "famosos",
+  id: "celebrities",
   name: "Famosos",
   emoji: "⭐",
   ask: "um famoso ou famosa",

@@ -32,11 +32,11 @@ export type LiveSettings = GameOptions & {
 
 /** Nome curto de cada efeito no parâmetro da URL. */
 const GIFT_PARAM: Record<GiftEffect, string> = {
-  time: "p_tempo",
-  freeze: "p_congelar",
-  letter: "p_letra",
-  category: "p_categoria",
-  double: "p_dobro",
+  time: "gift_time",
+  freeze: "gift_freeze",
+  letter: "gift_letter",
+  category: "gift_category",
+  double: "gift_double",
 };
 
 export const DEFAULT_LIVE_SETTINGS: Omit<LiveSettings, "cid"> = {
@@ -76,27 +76,31 @@ export const extractChannelId = (input: string): string | null => {
 const CATEGORY_IDS = new Set(CATEGORIES.map((category) => category.id));
 
 export const settingsFromSearch = (cid: string, search: URLSearchParams): LiveSettings => {
-  const categories = (search.get("categorias") ?? "")
+  const categories = (search.get("categories") ?? "")
     .split(",")
     .filter((id) => CATEGORY_IDS.has(id));
   return {
     cid,
-    roundSec: clamp(Number(search.get("tempo") ?? NaN), LIMITS.roundSec, DEFAULT_OPTIONS.roundSec),
-    rounds: clamp(Number(search.get("rodadas") ?? NaN), LIMITS.rounds, DEFAULT_OPTIONS.rounds),
+    roundSec: clamp(
+      Number(search.get("round_time") ?? NaN),
+      LIMITS.roundSec,
+      DEFAULT_OPTIONS.roundSec,
+    ),
+    rounds: clamp(Number(search.get("rounds") ?? NaN), LIMITS.rounds, DEFAULT_OPTIONS.rounds),
     intermissionSec: clamp(
-      Number(search.get("intervalo") ?? NaN),
+      Number(search.get("break") ?? NaN),
       LIMITS.intermissionSec,
       DEFAULT_OPTIONS.intermissionSec,
     ),
     categories,
-    hardLetters: search.get("dificeis") === "1",
+    hardLetters: search.get("hard_letters") === "1",
     admins: (search.get("admins") ?? "").split(",").map(normalizeHandle).filter(Boolean),
     demo: cid === DEMO_CID || search.get("demo") === "1",
-    sound: search.get("som") !== "0",
+    sound: search.get("sound") !== "0",
     volume: clamp(Number(search.get("volume") ?? NaN), [0, 100], DEFAULT_LIVE_SETTINGS.volume),
-    background: search.get("fundo") === "transparente" ? "transparent" : "full",
-    preview: search.get("previa") === "1",
-    gifts: search.get("presentes") !== "0",
+    background: search.get("background") === "transparent" ? "transparent" : "full",
+    preview: search.get("preview") === "1",
+    gifts: search.get("gifts") !== "0",
     giftNames: Object.fromEntries(
       GIFT_EFFECTS.map((effect) => [
         effect,
@@ -105,12 +109,12 @@ export const settingsFromSearch = (cid: string, search: URLSearchParams): LiveSe
     ) as Record<GiftEffect, string>,
     giftAmounts: {
       timeSec: clamp(
-        Number(search.get("seg_tempo") ?? NaN),
+        Number(search.get("time_bonus") ?? NaN),
         LIMITS.timeSec,
         DEFAULT_GIFT_AMOUNTS.timeSec,
       ),
       freezeSec: clamp(
-        Number(search.get("seg_congelar") ?? NaN),
+        Number(search.get("freeze_time") ?? NaN),
         LIMITS.freezeSec,
         DEFAULT_GIFT_AMOUNTS.freezeSec,
       ),
@@ -121,29 +125,29 @@ export const settingsFromSearch = (cid: string, search: URLSearchParams): LiveSe
 export const overlayPath = (settings: LiveSettings): string => {
   const params = new URLSearchParams();
   const defaults = DEFAULT_LIVE_SETTINGS;
-  if (settings.roundSec !== defaults.roundSec) params.set("tempo", String(settings.roundSec));
-  if (settings.rounds !== defaults.rounds) params.set("rodadas", String(settings.rounds));
+  if (settings.roundSec !== defaults.roundSec) params.set("round_time", String(settings.roundSec));
+  if (settings.rounds !== defaults.rounds) params.set("rounds", String(settings.rounds));
   if (settings.intermissionSec !== defaults.intermissionSec)
-    params.set("intervalo", String(settings.intermissionSec));
+    params.set("break", String(settings.intermissionSec));
   if (settings.categories.length && settings.categories.length < CATEGORIES.length)
-    params.set("categorias", settings.categories.join(","));
-  if (settings.hardLetters) params.set("dificeis", "1");
+    params.set("categories", settings.categories.join(","));
+  if (settings.hardLetters) params.set("hard_letters", "1");
   if (settings.admins.length) params.set("admins", settings.admins.join(","));
   if (settings.demo && settings.cid !== DEMO_CID) params.set("demo", "1");
-  if (!settings.sound) params.set("som", "0");
+  if (!settings.sound) params.set("sound", "0");
   else if (settings.volume !== defaults.volume) params.set("volume", String(settings.volume));
-  if (settings.background === "transparent") params.set("fundo", "transparente");
-  if (settings.preview) params.set("previa", "1");
-  if (!settings.gifts) params.set("presentes", "0");
+  if (settings.background === "transparent") params.set("background", "transparent");
+  if (settings.preview) params.set("preview", "1");
+  if (!settings.gifts) params.set("gifts", "0");
   else {
     for (const effect of GIFT_EFFECTS) {
       if (settings.giftNames[effect] !== DEFAULT_GIFT_NAMES[effect])
         params.set(GIFT_PARAM[effect], settings.giftNames[effect]);
     }
     if (settings.giftAmounts.timeSec !== DEFAULT_GIFT_AMOUNTS.timeSec)
-      params.set("seg_tempo", String(settings.giftAmounts.timeSec));
+      params.set("time_bonus", String(settings.giftAmounts.timeSec));
     if (settings.giftAmounts.freezeSec !== DEFAULT_GIFT_AMOUNTS.freezeSec)
-      params.set("seg_congelar", String(settings.giftAmounts.freezeSec));
+      params.set("freeze_time", String(settings.giftAmounts.freezeSec));
   }
   const query = params.toString();
   return `/live/${settings.cid}${query ? `?${query}` : ""}`;
