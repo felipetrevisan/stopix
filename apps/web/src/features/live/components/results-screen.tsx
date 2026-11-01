@@ -1,108 +1,118 @@
 "use client";
 
 import type { RoundSummary } from "@stopix/game-core";
-import { Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import { Avatar } from "./avatar";
 import { Confetti } from "./confetti";
 
-function AlsoValid({ words }: { words: string[] }) {
-  if (!words.length) return null;
+/** Foto com anel em degradê girando. */
+export function HaloAvatar({
+  player,
+  size,
+}: {
+  player: RoundSummary["podium"][number]["player"];
+  size: number;
+}) {
   return (
-    <motion.div
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.9 }}
-      className="mt-7 flex flex-col items-center gap-2"
+    <div
+      className="relative flex items-center justify-center"
+      style={{ width: size + 16, height: size + 16 }}
     >
-      <span className="rounded-full border-2 border-ink bg-sun px-3 py-0.5 font-[family-name:var(--font-display)] text-[14px] text-ink">
-        TAMBÉM VALIA
-      </span>
-      <div className="flex max-w-[480px] flex-wrap justify-center gap-1.5">
-        {words.map((word) => (
-          <span
-            key={word}
-            className="rounded-lg border-2 border-ink bg-white px-2.5 py-0.5 font-[family-name:var(--font-display)] text-[17px] text-ink capitalize"
-          >
-            {word}
-          </span>
-        ))}
-      </div>
-    </motion.div>
+      <span className="ring-spin absolute inset-0 rounded-full" />
+      <span className="absolute inset-[4px] rounded-full bg-deep" />
+      <Avatar player={player} size={size} className="relative" />
+    </div>
   );
 }
 
-/** Vencedor da rodada: foto grande com raios, pontos, 2º e 3º e o que também valia. */
-export function ResultsScreen({ summary }: { summary: RoundSummary }) {
+/** Vencedor da rodada: cartão com a foto, a palavra, os pontos, 2º e 3º e o que também valia. */
+export function ResultsScreen({ summary, round }: { summary: RoundSummary; round: number }) {
   const [winner, ...others] = summary.podium;
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="stage-bg absolute inset-0 z-20 flex flex-col items-center pt-[120px]"
+      className="stage-bg absolute inset-0 z-20 flex flex-col items-center justify-center px-6"
     >
       {winner ? <Confetti /> : null}
-      <motion.div
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="flex items-center gap-2"
-      >
-        <Trophy className="size-9 fill-sun text-[#b86e00]" />
-        <span className="game-text text-[38px] text-sun">
-          {winner ? "Vencedor da rodada" : "Ninguém acertou!"}
-        </span>
-      </motion.div>
+      <span className="text-[13px] font-extrabold tracking-[0.3em] text-aqua-light uppercase">
+        Rodada {round}
+      </span>
+      <span className="mt-1 text-[40px] leading-none font-black tracking-tight text-white">
+        {winner ? "Quem levou" : "Ninguém acertou"}
+      </span>
 
-      {winner ? (
-        <>
-          <div className="relative mt-4 flex size-[250px] items-center justify-center">
-            <div className="sunburst absolute inset-0 rounded-full" />
-            <motion.div
+      <motion.div
+        initial={{ y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="glass mt-6 flex w-full flex-col items-center rounded-[32px] px-6 pt-7 pb-6"
+      >
+        {winner ? (
+          <>
+            <HaloAvatar player={winner.player} size={128} />
+            <span className="mt-3 max-w-full truncate text-[32px] font-black tracking-tight text-white">
+              {winner.player.name}
+            </span>
+            <span className="mt-1 rounded-full bg-white/10 px-3 py-0.5 text-[16px] font-bold text-white/90 capitalize">
+              {winner.word}
+            </span>
+            <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 260, damping: 15, delay: 0.15 }}
-              className="relative rounded-full bg-sun p-[5px] shadow-[0_0_30px_rgb(255_210_63_/_0.8)]"
+              transition={{ type: "spring", delay: 0.35 }}
+              className="grad-text mt-2 text-[64px] leading-none font-black italic"
             >
-              <span className="absolute -top-[34px] left-1/2 -translate-x-1/2 text-[44px]">👑</span>
-              <Avatar player={winner.player} size={136} className="border-4 border-ink" />
-            </motion.div>
-          </div>
-          <span className="game-text -mt-3 max-w-[480px] truncate text-[38px] text-white normal-case">
-            {winner.player.name}
+              +{winner.points}
+            </motion.span>
+            {others.length ? (
+              <div className="mt-4 grid w-full grid-cols-2 gap-2">
+                {others.map((place, index) => (
+                  <div
+                    key={place.player.id}
+                    className="flex items-center gap-2 rounded-2xl bg-white/[0.07] px-2.5 py-2"
+                  >
+                    <span className="text-[15px] font-black text-white/60">{index + 2}º</span>
+                    <Avatar player={place.player} size={28} />
+                    <span className="min-w-0 flex-1 truncate text-[13px] font-bold">
+                      {place.player.name}
+                    </span>
+                    <span className="text-[13px] font-black text-aqua-light">+{place.points}</span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <span className="py-6 text-[16px] font-medium text-white/75">
+            Ninguém mandou uma resposta certa a tempo.
           </span>
-          <span className="mt-0.5 text-[15px] font-black text-white/90 uppercase">
-            “{winner.word}”
+        )}
+      </motion.div>
+
+      {summary.alsoValid.length ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-6 flex flex-col items-center gap-2"
+        >
+          <span className="text-[12px] font-extrabold tracking-[0.2em] text-white/60 uppercase">
+            Também valia
           </span>
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", delay: 0.45 }}
-            className="pill-green mt-2 rounded-full px-5 py-1 font-[family-name:var(--font-display)] text-[26px] text-white"
-          >
-            +{winner.points} PONTOS
-          </motion.span>
-          <div className="mt-4 flex gap-2.5">
-            {others.map((place, index) => (
-              <motion.span
-                key={place.player.id}
-                initial={{ y: 16, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 + index * 0.12 }}
-                className="flex items-center gap-1.5 rounded-full border-2 border-ink bg-white py-0.5 pr-2.5 pl-1 text-[13px] font-black text-ink"
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {summary.alsoValid.map((word) => (
+              <span
+                key={word}
+                className="rounded-full border border-aqua/50 px-3 py-1 text-[15px] font-bold text-aqua-light capitalize"
               >
-                <span className="pl-1">{index + 2}º</span>
-                <Avatar player={place.player} size={24} />
-                <span className="max-w-[110px] truncate">{place.player.name}</span>
-                <span className="text-[#22a845]">+{place.points}</span>
-              </motion.span>
+                {word}
+              </span>
             ))}
           </div>
-        </>
-      ) : (
-        <span className="mt-10 text-[110px]">😅</span>
-      )}
-      <AlsoValid words={summary.alsoValid} />
+        </motion.div>
+      ) : null}
     </motion.div>
   );
 }

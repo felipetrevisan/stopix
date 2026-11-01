@@ -2,7 +2,7 @@
 
 import { type GameCommand, TIMINGS, getCategory, ranking } from "@stopix/game-core";
 import { Hand, RotateCcw, SkipForward } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { LiveSettings } from "../settings";
@@ -18,12 +18,11 @@ import {
   setSoundVolume,
 } from "../sounds";
 import { type GameFeedEvent, useStopGame } from "../use-stop-game";
-import { AnswersGrid } from "./answers-grid";
+import { AnswersFeed } from "./answers-feed";
 import { FinalScreen } from "./final-screen";
-import { LetterDial } from "./letter-dial";
+import { HeroCard } from "./hero-card";
+import { Leaderboard } from "./leaderboard";
 import { type OvertakeToast, OvertakeToasts } from "./overtake-toasts";
-import { PromptBanner } from "./prompt-banner";
-import { RankingBoard } from "./ranking-board";
 import { ResultsScreen } from "./results-screen";
 import { StopScreen } from "./stop-screen";
 import { TopBar } from "./top-bar";
@@ -58,33 +57,13 @@ function Stage({ children, transparent }: { children: ReactNode; transparent: bo
   );
 }
 
-function Bokeh() {
-  return (
-    <div className="pointer-events-none absolute inset-0" aria-hidden>
-      <span className="bokeh" style={{ width: 70, height: 70, top: 150, left: -20 }} />
-      <span
-        className="bokeh"
-        style={{ width: 34, height: 34, top: 260, right: 40, animationDelay: "-4s" }}
-      />
-      <span
-        className="bokeh"
-        style={{ width: 120, height: 120, top: 520, right: -50, animationDelay: "-7s" }}
-      />
-      <span
-        className="bokeh"
-        style={{ width: 26, height: 26, top: 90, right: 120, animationDelay: "-2s" }}
-      />
-      <span
-        className="bokeh"
-        style={{ width: 48, height: 48, top: 640, left: 30, animationDelay: "-9s" }}
-      />
-    </div>
-  );
+function Dots() {
+  return <div className="stage-dots pointer-events-none absolute inset-0" aria-hidden />;
 }
 
 function Controls({ onCommand }: { onCommand: (command: GameCommand) => void }) {
   const button =
-    "flex items-center gap-1 rounded-full bg-ink/90 px-3 py-1.5 text-[12px] font-black text-white hover:bg-ink";
+    "glass flex items-center gap-1 rounded-full px-3 py-1.5 text-[12px] font-bold text-white hover:bg-white/20";
   return (
     <div className="absolute inset-x-0 bottom-1 z-40 flex justify-center gap-1.5 opacity-0 transition-opacity hover:opacity-100">
       <button type="button" className={button} onClick={() => onCommand("stop")}>
@@ -176,59 +155,34 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
 
   return (
     <Stage transparent={settings.background === "transparent"}>
-      {settings.background === "full" ? <Bokeh /> : null}
+      {settings.background === "full" ? <Dots /> : null}
       <TopBar round={round.number} totalRounds={state.totalRounds} viewers={viewers} chat={chat} />
 
-      <div className="absolute inset-x-0 top-[56px] flex justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`${round.number}-${round.categoryId}`}
-            initial={{ y: -14, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            className="flex items-center gap-1.5 rounded-full border-[3px] border-ink bg-gradient-to-b from-[#ff6fb5] to-[#d61f6e] px-5 py-0.5 shadow-[0_3px_0_#1b0b3a]"
-          >
-            <span className="text-[20px]">{category?.emoji}</span>
-            <span className="game-text-sm text-[24px] text-white">{category?.name}</span>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      <div className="absolute inset-x-0 top-[100px] flex justify-center">
-        <LetterDial
+      <div className="absolute inset-x-0 top-[70px]">
+        <HeroCard
+          phase={phase}
           letter={round.letter}
-          spinning={phase === "drawing"}
+          category={category}
           fraction={fraction}
           seconds={dialSeconds}
           onSpinTick={settings.sound ? onSpinTick : undefined}
         />
       </div>
 
-      <div className="absolute inset-x-0 top-[326px]">
-        <PromptBanner phase={phase} ask={category?.ask ?? ""} letter={round.letter} />
+      <div className="absolute inset-x-0 top-[318px] h-[308px]">
+        <AnswersFeed answers={round.answers} />
       </div>
 
-      <div className="absolute inset-x-0 top-[408px] h-[236px]">
-        {phase === "drawing" ? null : <AnswersGrid answers={round.answers} />}
-      </div>
+      <OvertakeToasts toast={toast} top={634} />
 
-      <OvertakeToasts toast={toast} />
-
-      <div className="absolute inset-x-0 top-[712px]">
-        <RankingBoard ranking={board} />
-      </div>
-
-      <div className="absolute inset-x-0 bottom-3 flex items-center justify-between px-4 text-[11px] font-black text-white/70">
-        <span>Comente sua resposta no chat 💬</span>
-        <span className="font-[family-name:var(--font-display)] text-[15px] tracking-wide text-white/85">
-          STOPIX
-        </span>
+      <div className="absolute inset-x-0 top-[676px]">
+        <Leaderboard ranking={board} />
       </div>
 
       <AnimatePresence>
         {phase === "stop" ? <StopScreen key="stop" answered={round.answers.length} /> : null}
         {phase === "results" && round.summary ? (
-          <ResultsScreen key="results" summary={round.summary} />
+          <ResultsScreen key="results" summary={round.summary} round={round.number} />
         ) : null}
         {phase === "final" ? <FinalScreen key="final" ranking={board} seconds={seconds} /> : null}
       </AnimatePresence>

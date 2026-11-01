@@ -15,7 +15,7 @@ import {
   overlayPath,
 } from "../settings";
 import { playSampleSounds, setSoundVolume } from "../sounds";
-import { StopOctagon } from "./stop-octagon";
+import { BrandMark } from "./brand-mark";
 
 const STORAGE_KEY = "stopix:panel";
 const ALL_IDS = CATEGORIES.map((category) => category.id);
@@ -75,9 +75,7 @@ const toSettings = (form: Form, cid: string): LiveSettings => ({
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="rounded-2xl border border-line bg-panel p-5">
-      <h2 className="mb-4 font-[family-name:var(--font-display)] text-lg tracking-wide text-sun">
-        {title}
-      </h2>
+      <h2 className="mb-4 text-lg font-extrabold tracking-tight text-aqua-light">{title}</h2>
       <div className="flex flex-col gap-4">{children}</div>
     </section>
   );
@@ -112,7 +110,7 @@ function Toggle({
       <span
         className={cn(
           "relative h-6 w-11 shrink-0 rounded-full transition-colors",
-          on ? "bg-lime" : "bg-white/15",
+          on ? "bg-aqua" : "bg-white/15",
         )}
       >
         <span
@@ -128,7 +126,7 @@ function Toggle({
 }
 
 const inputClass =
-  "h-10 rounded-xl border border-line bg-night/70 px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet";
+  "h-10 rounded-xl border border-line bg-night/70 px-3 outline-none focus-visible:ring-2 focus-visible:ring-aqua";
 
 /** Painel do streamer: monta o link do overlay e mostra uma prévia com chat simulado. */
 export function Panel() {
@@ -185,9 +183,11 @@ export function Panel() {
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 lg:flex-row lg:items-start">
       <div className="flex min-w-0 flex-1 flex-col gap-5">
         <header className="flex items-center gap-3">
-          <StopOctagon size={56} label="STOP" />
+          <BrandMark size={56} />
           <div>
-            <h1 className="game-text text-4xl text-white">Stopix Live</h1>
+            <h1 className="text-4xl font-black tracking-tight italic">
+              <span className="grad-text">STOPIX</span> <span className="text-white">Live</span>
+            </h1>
             <p className="text-sm text-muted">
               Stop (adedonha) com o chat da sua live: sorteia categoria e letra, quem acertar
               primeiro ganha mais pontos. Integrado ao Neon Live Labs.
@@ -209,7 +209,7 @@ export function Panel() {
             />
           </Field>
           {form.channel && !cid ? (
-            <p className="text-sm font-bold text-stop">Não achei o código do canal nesse link.</p>
+            <p className="text-sm font-bold text-hot">Não achei o código do canal nesse link.</p>
           ) : null}
         </Section>
 
@@ -267,7 +267,7 @@ export function Panel() {
                   className={cn(
                     "rounded-full border px-3 py-1.5 text-sm font-bold transition-colors",
                     on
-                      ? "border-sun bg-sun/15 text-white"
+                      ? "border-aqua bg-aqua/15 text-white"
                       : "border-line bg-transparent text-muted line-through",
                   )}
                 >
@@ -312,7 +312,7 @@ export function Panel() {
                   max={100}
                   value={form.volume}
                   onChange={update("volume")}
-                  className="w-36 accent-sun"
+                  className="w-36 accent-teal-400"
                   aria-label="Volume"
                 />
                 <button
@@ -350,7 +350,7 @@ export function Panel() {
                 <button
                   type="button"
                   onClick={copy}
-                  className="flex items-center gap-1.5 rounded-xl bg-sun px-4 font-bold text-ink"
+                  className="flex items-center gap-1.5 rounded-xl grad-brand px-4 font-bold text-white"
                 >
                   {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
                   {copied ? "Copiado" : "Copiar"}
@@ -396,9 +396,9 @@ export function Panel() {
               Repetida: <b className="text-white">+{POINTS.repeated}</b>.
             </li>
             <li>
-              Moderadores: <code className="text-sun">{COMMAND_PREFIX}</code> (STOP agora),{" "}
-              <code className="text-sun">{COMMAND_PREFIX} pular</code> (troca a letra),{" "}
-              <code className="text-sun">{COMMAND_PREFIX} zerar</code> (nova partida).
+              Moderadores: <code className="text-aqua-light">{COMMAND_PREFIX}</code> (STOP agora),{" "}
+              <code className="text-aqua-light">{COMMAND_PREFIX} pular</code> (troca a letra),{" "}
+              <code className="text-aqua-light">{COMMAND_PREFIX} zerar</code> (nova partida).
             </li>
           </ul>
         </Section>
@@ -416,7 +416,7 @@ export function Panel() {
           href={`/live/${DEMO_CID}`}
           target="_blank"
           rel="noreferrer"
-          className="text-sm font-bold text-sun underline"
+          className="text-sm font-bold text-aqua-light underline"
         >
           Abrir a demonstração em tela cheia
         </a>

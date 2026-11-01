@@ -4,7 +4,7 @@ import type { Player } from "@stopix/game-core";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const COLORS = ["#ff5d8f", "#7b5cff", "#20b8a6", "#ff9f1c", "#3a86ff", "#e0309a", "#34c759"];
+const COLORS = ["#14b8a6", "#3b82f6", "#8b5cf6", "#0ea5e9", "#6366f1", "#0d9488", "#7c3aed"];
 
 const colorOf = (id: string) => {
   let hash = 0;
@@ -43,7 +43,7 @@ export function Avatar({
   return (
     <span
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-display)] text-white",
+        "flex shrink-0 items-center justify-center rounded-full font-black text-white",
         className,
       )}
       style={{ ...style, background: colorOf(player.id) }}

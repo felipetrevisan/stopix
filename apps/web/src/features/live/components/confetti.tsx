@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
 
-const COLORS = ["#ffd23f", "#34c759", "#ff5d8f", "#3a86ff", "#ffffff", "#ff9f1c", "#b388ff"];
+const COLORS = ["#2dd4bf", "#5eead4", "#3b82f6", "#60a5fa", "#8b5cf6", "#c4b5fd", "#ffffff"];
 
 /** Chuva de confete que explode do centro e cai. */
 export function Confetti({ count = 70 }: { count?: number }) {

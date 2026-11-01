@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import "@fontsource/lilita-one/400.css";
-import "@fontsource-variable/nunito/wght.css";
+import "@fontsource-variable/rubik/wght.css";
+import "@fontsource-variable/rubik/wght-italic.css";
 import "./styles.css";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#12082a",
+  themeColor: "#070a1f",
   colorScheme: "dark",
 };
 

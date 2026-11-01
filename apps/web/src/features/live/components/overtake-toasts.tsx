@@ -1,33 +1,32 @@
 "use client";
 
 import type { Overtake } from "@stopix/game-core";
+import { TrendingUp } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Avatar } from "./avatar";
 
 export type OvertakeToast = Overtake & { id: number };
 
-/** "🔥 fulano passou beltrano! 2º lugar" logo acima do ranking. */
-export function OvertakeToasts({ toast }: { toast: OvertakeToast | null }) {
+/** Aviso de ultrapassagem que entra pela direita, logo acima do placar. */
+export function OvertakeToasts({ toast, top }: { toast: OvertakeToast | null; top: number }) {
   return (
-    <div
-      className="pointer-events-none absolute inset-x-0 z-10 flex justify-center"
-      style={{ top: 664 }}
-    >
+    <div className="pointer-events-none absolute right-4 z-10" style={{ top }}>
       <AnimatePresence mode="wait">
         {toast ? (
           <motion.div
             key={toast.id}
-            initial={{ y: 20, opacity: 0, scale: 0.8 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: -10, opacity: 0 }}
-            className="flex max-w-[500px] items-center gap-1.5 rounded-full border-2 border-sun bg-ink/95 py-1 pr-3.5 pl-1 text-[14px] font-extrabold text-white shadow-[0_0_16px_rgb(255_210_63_/_0.6)]"
+            initial={{ x: 280, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 280, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            className="grad-brand flex max-w-[440px] items-center gap-2 rounded-2xl py-1.5 pr-3 pl-1.5 text-[13px] font-semibold text-white shadow-[0_8px_24px_rgb(59_130_246_/_0.5)]"
           >
-            <Avatar player={toast.player} size={26} />
-            <span>🔥</span>
+            <Avatar player={toast.player} size={28} className="ring-2 ring-white/60" />
+            <TrendingUp className="size-4 shrink-0" strokeWidth={3} />
             <span className="truncate">
-              <b className="text-sun">{toast.player.name}</b> passou <b>{toast.passed.name}</b>!{" "}
-              {toast.position}º lugar
+              <b>{toast.player.name}</b> passou <b>{toast.passed.name}</b>
             </span>
+            <span className="rounded-lg bg-white/25 px-1.5 font-black">{toast.position}º</span>
           </motion.div>
         ) : null}
       </AnimatePresence>

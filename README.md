@@ -7,15 +7,19 @@ o overlay lê o chat em `channels/{código}/events` no Realtime Database do Neon
 
 ## Como funciona uma rodada
 
-1. **Sorteando a letra…** (3 s): categoria no selo do topo e as letras girando.
-2. **Valendo** (30 s por padrão): “MANDA NO CHAT UMA FRUTA COM A LETRA G”. O anel do tempo
-   vai de verde para laranja e vermelho; tique-taque nos últimos 5 s.
-3. **STOP!**: placa vermelha e “Conferindo N respostas…”.
-4. **Vencedor da rodada**: foto com raios e confete, 2º e 3º, e o que **também valia**.
-5. **A próxima rodada já vai começar** (6 s) e volta para o passo 1.
+1. **Sorteando** (3 s): a categoria aparece no cartão principal e as letras correm na caixa.
+2. **Valendo** (30 s por padrão): “Mande no chat uma fruta que comece com G”. A barra do
+   tempo esvazia (verde-água → azul → roxo, rosa nos últimos 25%); tique-taque nos últimos 5 s.
+3. **STOP!**: mão de “pare” com ondas e “Conferindo N respostas…”.
+4. **Quem levou**: cartão do vencedor com anel em degradê, a palavra, os pontos, 2º e 3º e
+   o que **também valia**.
+5. **Próxima rodada em N s** (6 s) e volta para o passo 1.
 
-Depois da última rodada (10 por padrão) aparece o **campeão da partida** com pódio, e
-uma partida nova começa sozinha.
+Depois da última rodada (10 por padrão) aparece o **campeão da partida** com o placar
+final, e uma partida nova começa sozinha.
+
+Visual: fundo azul-escuro com brilhos verde-água e roxo, painéis de vidro, fonte Rubik.
+Nada de pódio de coroa ou placa de trânsito: a identidade é o cronômetro em degradê.
 
 ### Pontos
 
@@ -29,7 +33,7 @@ Cada pessoa vale **uma resposta certa por rodada** (errar não tira ponto, pode 
 novo). A resposta é conferida na lista da categoria (`packages/game-core/src/categories`):
 acento, maiúscula, hífen ou espaço, plural (“goiabas”, “limões”), artigo na frente (“uma
 goiaba”) e um erro de digitação em palavras de 6+ letras passam. Quando alguém sobe no
-top 5, aparece “🔥 fulano passou beltrano! 3º lugar”.
+top 5, entra um aviso “fulano passou beltrano · 3º”.
 
 ### Comandos (moderadores da live e os @ liberados no painel)
 
@@ -71,7 +75,7 @@ app no estilo do Sentrix volta a fazer sentido.
 
 - `bun` workspaces + `turbo` + `biome` (igual ao Sentrix)
 - `apps/web`: `next@16`, `react@19`, `tailwindcss@4`, `motion`, Firebase (só o Realtime
-  Database do Neon, no navegador). Fontes Lilita One e Nunito (`@fontsource`).
+  Database do Neon, no navegador). Fonte Rubik (`@fontsource-variable/rubik`).
 - `packages/game-core`: regras puras e testadas: listas de palavras, conferência das
   respostas, sorteio, pontos, fases e comandos.
 - Sons sintetizados com Web Audio (sem arquivos).
