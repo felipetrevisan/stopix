@@ -1,9 +1,8 @@
 "use client";
 
 import { Users } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { ChatStatus } from "../chat-source";
-import { BrandLogo } from "./brand-mark";
+import { BrandMark } from "./brand-mark";
 
 const STATUS_LABEL: Partial<Record<ChatStatus, string>> = {
   connecting: "Conectando ao chat…",
@@ -11,34 +10,7 @@ const STATUS_LABEL: Partial<Record<ChatStatus, string>> = {
   "not-configured": "Chat indisponível",
 };
 
-/** Bolinhas das rodadas (até 12); acima disso, "3/20". */
-function RoundPips({ round, total }: { round: number; total: number }) {
-  if (total > 12) {
-    return (
-      <span className="text-[13px] font-extrabold text-white/90">
-        Rodada <span className="text-aqua-light">{round}</span>/{total}
-      </span>
-    );
-  }
-  return (
-    <span className="flex items-center gap-1" aria-label={`Rodada ${round} de ${total}`}>
-      {Array.from({ length: total }, (_, index) => (
-        <span
-          // biome-ignore lint/suspicious/noArrayIndexKey: posição fixa
-          key={index}
-          className={cn(
-            "h-2 rounded-full transition-all",
-            index + 1 < round && "w-2 bg-aqua",
-            index + 1 === round && "w-5 bg-white shadow-[0_0_10px_#5eead4]",
-            index + 1 > round && "w-2 bg-white/20",
-          )}
-        />
-      ))}
-    </span>
-  );
-}
-
-/** Topo do palco: marca, rodadas e quem está assistindo. */
+/** Topo do palco: marca, ao vivo, quem está assistindo e a rodada. */
 export function TopBar({
   round,
   totalRounds,
@@ -52,21 +24,29 @@ export function TopBar({
 }) {
   const warning = STATUS_LABEL[chat];
   return (
-    <div className="absolute inset-x-0 top-0 flex h-[60px] items-center justify-between px-5">
-      <BrandLogo />
+    <div className="absolute inset-x-0 top-0 flex h-[56px] items-center justify-between px-4">
+      <div className="flex items-center gap-2">
+        <BrandMark size={36} className="drop-shadow-[0_3px_0_#120a3a]" />
+        <span className="game-text-sm text-[22px] text-white italic">Stopix</span>
+        <span className="rounded-full border-2 border-[#120a3a] bg-aqua px-2 text-[12px] font-black text-[#120a3a]">
+          LIVE
+        </span>
+      </div>
       {warning ? (
-        <span className="rounded-full bg-hot/90 px-2.5 py-1 text-[11px] font-bold text-white">
+        <span className="rounded-full bg-hot px-2.5 py-1 text-[11px] font-bold text-white">
           {warning}
         </span>
       ) : null}
-      <div className="glass flex items-center gap-3 rounded-full px-3 py-1.5">
-        <RoundPips round={round} total={totalRounds} />
+      <div className="flex items-center gap-1.5">
         {viewers > 0 ? (
-          <span className="flex items-center gap-1 border-l border-white/15 pl-3 text-[13px] font-bold text-white/90">
-            <Users className="size-3.5 text-aqua-light" strokeWidth={2.5} />
+          <span className="flex items-center gap-1 rounded-full border-2 border-[#120a3a] bg-[#120a3a]/70 px-2 py-0.5 text-[13px] font-black text-white">
+            <Users className="size-3.5 text-aqua-light" strokeWidth={3} />
             {viewers}
           </span>
         ) : null}
+        <span className="rounded-full border-2 border-[#120a3a] bg-white px-2.5 py-0.5 text-[13px] font-black text-[#120a3a] shadow-[0_2px_0_#120a3a]">
+          RODADA {round}/{totalRounds}
+        </span>
       </div>
     </div>
   );

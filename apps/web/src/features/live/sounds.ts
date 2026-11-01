@@ -126,6 +126,28 @@ export const playChampionSound = () =>
     { freq: 523, at: 1.2, length: 0.8, type: "sine", gain: 0.15 },
   ]);
 
+/** Presente que mexeu no jogo. */
+export const playGiftSound = (effect: import("@stopix/game-core").GiftEffect) => {
+  if (effect === "time")
+    play([
+      { freq: 700, to: 1400, at: 0, length: 0.25, type: "triangle", gain: 0.2 },
+      { freq: 1400, at: 0.22, length: 0.2, type: "sine", gain: 0.16 },
+    ]);
+  else if (effect === "freeze")
+    play([
+      { freq: 2093, at: 0, length: 0.5, type: "sine", gain: 0.1 },
+      { freq: 2637, at: 0.08, length: 0.5, type: "sine", gain: 0.08 },
+      { freq: 3136, at: 0.16, length: 0.6, type: "sine", gain: 0.07 },
+    ]);
+  else if (effect === "double")
+    play([
+      { freq: 523, at: 0, length: 0.12, type: "square", gain: 0.08 },
+      { freq: 784, at: 0.1, length: 0.12, type: "square", gain: 0.08 },
+      { freq: 1047, at: 0.2, length: 0.35, type: "square", gain: 0.09 },
+    ]);
+  else play([{ freq: 1200, to: 300, at: 0, length: 0.35, type: "sawtooth", gain: 0.07 }]);
+};
+
 /** Botão "Ouvir os sons" do painel. */
 export const playSampleSounds = () => {
   const steps: (() => void)[] = [
@@ -135,6 +157,8 @@ export const playSampleSounds = () => {
     () => playAnswerSound("repeated"),
     playOvertakeSound,
     () => playCountdownTick(true),
+    () => playGiftSound("time"),
+    () => playGiftSound("freeze"),
     playStopSound,
     playWinSound,
   ];

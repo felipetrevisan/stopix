@@ -1,6 +1,14 @@
 "use client";
 
-import { CATEGORIES, COMMAND_PREFIX, POINTS } from "@stopix/game-core";
+import {
+  CATEGORIES,
+  COMMAND_PREFIX,
+  DEFAULT_GIFT_AMOUNTS,
+  DEFAULT_GIFT_NAMES,
+  GIFT_EFFECTS,
+  type GiftEffect,
+  POINTS,
+} from "@stopix/game-core";
 import { Check, Copy, ExternalLink, Volume2 } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
@@ -15,8 +23,10 @@ import {
   normalizeHandle,
   overlayPath,
 } from "../settings";
+import { loadGiftCatalog } from "../chat-source";
 import { playSampleSounds, setSoundVolume } from "../sounds";
 import { BrandMark } from "./brand-mark";
+import { GiftIcon, effectLabel } from "./gift-legend";
 
 const STORAGE_KEY = "stopix:panel";
 const ALL_IDS = CATEGORIES.map((category) => category.id);
@@ -32,6 +42,10 @@ type Form = {
   sound: boolean;
   volume: string;
   background: Background;
+  gifts: boolean;
+  giftNames: Record<GiftEffect, string>;
+  timeSec: string;
+  freezeSec: string;
 };
 
 const EMPTY_FORM: Form = {
@@ -45,7 +59,29 @@ const EMPTY_FORM: Form = {
   sound: true,
   volume: String(DEFAULT_LIVE_SETTINGS.volume),
   background: "full",
+  gifts: true,
+  giftNames: DEFAULT_GIFT_NAMES,
+  timeSec: String(DEFAULT_GIFT_AMOUNTS.timeSec),
+  freezeSec: String(DEFAULT_GIFT_AMOUNTS.freezeSec),
 };
+
+/** Presentes populares do TikTok, para sugerir no campo. */
+const POPULAR_GIFTS = [
+  "Rose",
+  "TikTok",
+  "Finger Heart",
+  "Perfume",
+  "Doughnut",
+  "Ice Cream Cone",
+  "Hand Hearts",
+  "Confetti",
+  "Sunglasses",
+  "Corgi",
+  "Money Gun",
+  "Galaxy",
+  "Lion",
+  "Universe",
+];
 
 const within = (value: string, [min, max]: readonly [number, number], fallback: number) => {
   const number = Math.round(Number(value));
@@ -71,6 +107,17 @@ const toSettings = (form: Form, cid: string): LiveSettings => ({
   sound: form.sound,
   volume: within(form.volume, [0, 100], DEFAULT_LIVE_SETTINGS.volume),
   background: form.background,
+  gifts: form.gifts,
+  giftNames: Object.fromEntries(
+    GIFT_EFFECTS.map((effect) => [
+      effect,
+      (form.giftNames?.[effect] ?? "").trim() || DEFAULT_GIFT_NAMES[effect],
+    ]),
+  ) as Record<GiftEffect, string>,
+  giftAmounts: {
+    timeSec: within(form.timeSec, LIMITS.timeSec, DEFAULT_GIFT_AMOUNTS.timeSec),
+    freezeSec: within(form.freezeSec, LIMITS.freezeSec, DEFAULT_GIFT_AMOUNTS.freezeSec),
+  },
 });
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -154,7 +201,17 @@ export function Panel() {
     }
   };
   const update =
-    (key: "channel" | "roundSec" | "rounds" | "intermissionSec" | "admins" | "volume") =>
+    (
+      key:
+        | "channel"
+        | "roundSec"
+        | "rounds"
+        | "intermissionSec"
+        | "admins"
+        | "volume"
+        | "timeSec"
+        | "freezeSec",
+    ) =>
     (event: { target: { value: string } }) =>
       save({ ...form, [key]: event.target.value });
 
@@ -167,6 +224,22 @@ export function Panel() {
   };
 
   const cid = extractChannelId(form.channel);
+
+  // Presentes que já apareceram nessa live, para sugerir e mostrar a imagem.
+  const [catalog, setCatalog] = useState<{ name: string; image: string }[]>([]);
+  useEffect(() => {
+    if (!cid) {
+      setCatalog([]);
+      return;
+    }
+    let cancelled = false;
+    loadGiftCatalog(cid)
+      .then((gifts) => !cancelled && setCatalog(gifts))
+      .catch(() => !cancelled && setCatalog([]));
+    return () => {
+      cancelled = true;
+    };
+  }, [cid]);
   const overlayUrl = cid ? `${origin}${overlayPath(toSettings(form, cid))}` : "";
   // Prévia com chat simulado e as mesmas opções, sem som (tocaria enquanto você configura).
   const previewPath = useMemo(
@@ -295,7 +368,86 @@ export function Panel() {
           </div>
         </Section>
 
-        <Section title="4. Moderação, som e fundo">
+        <Section title="4. Presentes mexendo no jogo">
+          <Toggle on={form.gifts} onClick={() => save({ ...form, gifts: !form.gifts })}>
+            Presentes da live mudam o jogo (a lista aparece ao lado da letra)
+          </Toggle>
+          {form.gifts ? (
+            <>
+              <datalist id="stopix-gifts">
+                {[...new Set([...catalog.map((gift) => gift.name), ...POPULAR_GIFTS])].map(
+                  (name) => (
+                    <option key={name} value={name} />
+                  ),
+                )}
+              </datalist>
+              <div className="flex flex-col gap-2">
+                {GIFT_EFFECTS.map((effect) => {
+                  const amounts = toSettings(form, "x").giftAmounts;
+                  const name = form.giftNames?.[effect] ?? "";
+                  const image = catalog.find(
+                    (gift) => gift.name.toLowerCase() === name.trim().toLowerCase(),
+                  )?.image;
+                  return (
+                    <div key={effect} className="flex items-center gap-3">
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/5">
+                        <GiftIcon effect={effect} image={image} size={30} />
+                      </span>
+                      <span className="w-36 shrink-0 text-sm font-bold">
+                        {effectLabel(effect, amounts)}
+                      </span>
+                      <input
+                        className={cn(inputClass, "min-w-0 flex-1")}
+                        list="stopix-gifts"
+                        value={name}
+                        placeholder={DEFAULT_GIFT_NAMES[effect]}
+                        aria-label={`Presente para ${effectLabel(effect, amounts)}`}
+                        onChange={(event) =>
+                          save({
+                            ...form,
+                            giftNames: { ...form.giftNames, [effect]: event.target.value },
+                          })
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field
+                  label="Segundos a mais por presente"
+                  hint={`${LIMITS.timeSec[0]} a ${LIMITS.timeSec[1]}`}
+                >
+                  <input
+                    className={inputClass}
+                    inputMode="numeric"
+                    value={form.timeSec}
+                    onChange={update("timeSec")}
+                  />
+                </Field>
+                <Field
+                  label="Segundos congelado por presente"
+                  hint={`${LIMITS.freezeSec[0]} a ${LIMITS.freezeSec[1]}`}
+                >
+                  <input
+                    className={inputClass}
+                    inputMode="numeric"
+                    value={form.freezeSec}
+                    onChange={update("freezeSec")}
+                  />
+                </Field>
+              </div>
+              <p className="text-xs text-muted">
+                Escreva o nome do presente como aparece no TikTok (as sugestões mostram os que já
+                chegaram na sua live). Combo conta cada presente: 5 rosas = 5 vezes mais tempo.
+                Troca de letra e de categoria valem uma vez por combo. Presente que chega entre
+                rodadas vale quando a próxima começa.
+              </p>
+            </>
+          ) : null}
+        </Section>
+
+        <Section title="5. Moderação, som e fundo">
           <Field
             label="Quem mais pode usar os comandos (além dos moderadores)"
             hint="@ separados por vírgula. Ex.: @seu_usuario, @amigo"
@@ -345,7 +497,7 @@ export function Panel() {
           </Toggle>
         </Section>
 
-        <Section title="5. Link do overlay">
+        <Section title="6. Link do overlay">
           {cid ? (
             <>
               <div className="flex gap-2">

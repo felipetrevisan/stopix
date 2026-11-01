@@ -4,3 +4,4 @@ export * from "./dictionary";
 export * from "./game";
 export * from "./normalize";
 export * from "./party";
+export * from "./gifts";

@@ -1,5 +1,6 @@
 import { CATEGORIES, getCategory } from "./categories";
 import { lettersWith, matchAnswer, wordsFor } from "./dictionary";
+import { type GiftAmounts, type GiftEffect, type PendingGift, applyPending } from "./gifts";
 
 // Motor do Stopix: funções puras sobre o estado da partida. Quem lê o chat, guarda o
 // estado e chama `tick` de tempos em tempos é o app (overlay no navegador da live).
@@ -16,6 +17,9 @@ export type Answer = {
   kind: AnswerKind;
   points: number;
   at: number;
+  /** Quadro em que valeu (presentes trocam letra e categoria no meio da rodada). */
+  categoryId?: string;
+  letter?: string;
 };
 
 export type Phase = "drawing" | "playing" | "stop" | "results" | "intermission" | "final";
@@ -31,6 +35,12 @@ export type RoundState = {
   /** Respostas certas, na ordem em que chegaram. */
   answers: Answer[];
   summary?: RoundSummary;
+  /** Pontos em dobro (presente). */
+  multiplier?: number;
+  /** Relógio parado até aqui (presente "congelar"). */
+  frozenUntil?: number;
+  /** Presentes que valeram nesta rodada, por efeito. */
+  gifts?: Partial<Record<GiftEffect, number>>;
 };
 
 export type ScoreEntry = { player: Player; points: number; correct: number; updatedAt: number };
@@ -46,6 +56,8 @@ export type GameState = {
   scores: Record<string, ScoreEntry>;
   /** Categoria:letra já sorteadas nesta partida. */
   used: string[];
+  /** Presentes que chegaram entre rodadas: valem quando a próxima começar. */
+  pending?: PendingGift[];
 };
 
 export type GameOptions = {
@@ -56,6 +68,8 @@ export type GameOptions = {
   categories: readonly string[];
   /** Sorteia também K, W, Y, X, Z e Q (quando a categoria tem palavras). */
   hardLetters: boolean;
+  /** Segundos de "mais tempo" e "congelar" por presente. */
+  giftAmounts?: GiftAmounts;
 };
 
 export const DEFAULT_OPTIONS: GameOptions = {
@@ -93,7 +107,7 @@ const categoryPool = (options: GameOptions) => {
   return chosen.length ? chosen : CATEGORIES.map((category) => category.id);
 };
 
-const playableLetters = (categoryId: string, options: GameOptions) =>
+export const playableLetters = (categoryId: string, options: GameOptions) =>
   lettersWith(categoryId, MIN_WORDS_PER_LETTER).filter(
     (letter) => options.hardLetters || !HARD_LETTERS.has(letter),
   );
@@ -147,12 +161,35 @@ export const createGame = (now: number, options: GameOptions, rng: Rng, game = 1
 export const ranking = (scores: Record<string, ScoreEntry>): ScoreEntry[] =>
   Object.values(scores).sort((a, b) => b.points - a.points || a.updatedAt - b.updatedAt);
 
+/** Respostas do quadro atual (categoria e letra que estão na tela). */
+export const boardAnswers = (round: RoundState): Answer[] =>
+  round.answers.filter(
+    (answer) =>
+      (answer.letter ?? round.letter) === round.letter &&
+      (answer.categoryId ?? round.categoryId) === round.categoryId,
+  );
+
+/** Segundos que faltam, contando o relógio congelado. */
+export const remainingMs = (state: GameState, now: number) =>
+  Math.max(0, state.phaseEndsAt - Math.max(now, state.round.frozenUntil ?? 0));
+
 export const summarizeRound = (round: RoundState, rng: Rng): RoundSummary => {
-  const podium = [...round.answers]
+  // Pódio por pessoa: quem acertou em mais de um quadro (troca de letra) soma tudo.
+  const byPlayer = new Map<string, RoundPlace & { at: number }>();
+  for (const answer of round.answers) {
+    const current = byPlayer.get(answer.player.id);
+    byPlayer.set(answer.player.id, {
+      player: answer.player,
+      word: answer.word,
+      points: (current?.points ?? 0) + answer.points,
+      at: current?.at ?? answer.at,
+    });
+  }
+  const podium = [...byPlayer.values()]
     .sort((a, b) => b.points - a.points || a.at - b.at)
     .slice(0, 3)
     .map(({ player, word, points }) => ({ player, word, points }));
-  const said = new Set(round.answers.map((answer) => answer.word));
+  const said = new Set(boardAnswers(round).map((answer) => answer.word));
   const unsaid = wordsFor(round.categoryId, round.letter).filter((word) => !said.has(word));
   return { podium, alsoValid: shuffle(unsaid, rng).slice(0, 4), answered: round.answers.length };
 };
@@ -178,8 +215,14 @@ const nextRound = (
 export const tick = (state: GameState, now: number, options: GameOptions, rng: Rng): GameState => {
   if (now < state.phaseEndsAt) return state;
   switch (state.phase) {
-    case "drawing":
-      return { ...state, phase: "playing", phaseEndsAt: now + options.roundSec * 1000 };
+    case "drawing": {
+      const playing = {
+        ...state,
+        phase: "playing" as const,
+        phaseEndsAt: now + options.roundSec * 1000,
+      };
+      return applyPending(playing, now, options, rng, options.giftAmounts);
+    }
     case "playing":
       return { ...state, phase: "stop", phaseEndsAt: now + TIMINGS.stopMs };
     case "stop":
@@ -196,7 +239,7 @@ export const tick = (state: GameState, now: number, options: GameOptions, rng: R
     case "intermission":
       return nextRound(state, now, options, rng, state.round.number + 1);
     case "final":
-      return createGame(now, options, rng, state.game + 1);
+      return { ...createGame(now, options, rng, state.game + 1), pending: state.pending };
   }
 };
 
@@ -220,15 +263,24 @@ export const submitAnswer = (
     return { state, outcome: { type: "ignored" } };
   }
   const { round } = state;
-  if (round.answers.some((answer) => answer.player.id === player.id)) {
+  const board = boardAnswers(round);
+  if (board.some((answer) => answer.player.id === player.id)) {
     return { state, outcome: { type: "already" } };
   }
   const match = matchAnswer(round.categoryId, round.letter, text);
   if (!match) return { state, outcome: { type: "invalid" } };
 
-  const repeated = round.answers.some((answer) => answer.key === match.key);
-  const kind: AnswerKind = round.answers.length === 0 ? "first" : repeated ? "repeated" : "new";
-  const answer: Answer = { player, ...match, kind, points: POINTS[kind], at: now };
+  const repeated = board.some((answer) => answer.key === match.key);
+  const kind: AnswerKind = board.length === 0 ? "first" : repeated ? "repeated" : "new";
+  const answer: Answer = {
+    player,
+    ...match,
+    kind,
+    points: POINTS[kind] * (round.multiplier ?? 1),
+    at: now,
+    categoryId: round.categoryId,
+    letter: round.letter,
+  };
 
   const before = ranking(state.scores).map((entry) => entry.player.id);
   const previous = state.scores[player.id];

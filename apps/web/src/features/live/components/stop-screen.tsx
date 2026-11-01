@@ -35,7 +35,7 @@ export function StopScreen({ answered }: { answered: number }) {
         initial={{ scale: 2.4, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 16, delay: 0.15 }}
-        className="grad-text -mt-2 text-[96px] leading-none font-black tracking-tighter italic"
+        className="game-text -mt-2 text-[96px] leading-none text-aqua-light italic"
       >
         STOP!
       </motion.span>
@@ -43,7 +43,7 @@ export function StopScreen({ answered }: { answered: number }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, delay: 0.5 }}
-        className="mt-4 text-[20px] font-bold text-white/90"
+        className="game-text-sm mt-4 text-[22px] text-white"
       >
         {answered > 0
           ? `Conferindo ${answered} ${answered === 1 ? "resposta" : "respostas"}…`

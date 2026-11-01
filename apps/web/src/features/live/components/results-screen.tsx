@@ -39,7 +39,7 @@ export function ResultsScreen({ summary, round }: { summary: RoundSummary; round
       <span className="text-[13px] font-extrabold tracking-[0.3em] text-aqua-light uppercase">
         Rodada {round}
       </span>
-      <span className="mt-1 text-[40px] leading-none font-black tracking-tight text-white">
+      <span className="game-text mt-1 text-[42px] leading-none text-white">
         {winner ? "Quem levou" : "Ninguém acertou"}
       </span>
 
@@ -47,7 +47,7 @@ export function ResultsScreen({ summary, round }: { summary: RoundSummary; round
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="glass mt-6 flex w-full flex-col items-center rounded-[32px] px-6 pt-7 pb-6"
+        className="chunky mt-6 flex w-full flex-col items-center rounded-[32px] px-6 pt-7 pb-6"
       >
         {winner ? (
           <>
@@ -62,7 +62,7 @@ export function ResultsScreen({ summary, round }: { summary: RoundSummary; round
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", delay: 0.35 }}
-              className="grad-text mt-2 text-[64px] leading-none font-black italic"
+              className="game-text mt-2 text-[64px] leading-none text-aqua-light italic"
             >
               +{winner.points}
             </motion.span>

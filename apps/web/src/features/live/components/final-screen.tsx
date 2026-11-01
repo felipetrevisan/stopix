@@ -20,7 +20,7 @@ export function FinalScreen({ ranking, seconds }: { ranking: ScoreEntry[]; secon
       <span className="text-[13px] font-extrabold tracking-[0.3em] text-aqua-light uppercase">
         Fim de partida
       </span>
-      <span className="grad-text mt-1 text-[52px] leading-none font-black tracking-tight italic">
+      <span className="game-text mt-1 text-[56px] leading-none text-aqua-light italic">
         CAMPEÃO
       </span>
       {first ? (

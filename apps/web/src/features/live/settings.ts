@@ -1,4 +1,13 @@
-import { CATEGORIES, DEFAULT_OPTIONS, type GameOptions } from "@stopix/game-core";
+import {
+  CATEGORIES,
+  DEFAULT_GIFT_AMOUNTS,
+  DEFAULT_GIFT_NAMES,
+  DEFAULT_OPTIONS,
+  GIFT_EFFECTS,
+  type GameOptions,
+  type GiftAmounts,
+  type GiftEffect,
+} from "@stopix/game-core";
 
 // Opções do overlay: vão na URL (a fonte de navegador do LIVE Studio/OBS não tem login).
 
@@ -15,6 +24,19 @@ export type LiveSettings = GameOptions & {
   background: Background;
   /** Esconde os botões de controle (prévia do painel). */
   preview: boolean;
+  /** Presentes ligados a efeitos no jogo. */
+  gifts: boolean;
+  giftNames: Record<GiftEffect, string>;
+  giftAmounts: GiftAmounts;
+};
+
+/** Nome curto de cada efeito no parâmetro da URL. */
+const GIFT_PARAM: Record<GiftEffect, string> = {
+  time: "p_tempo",
+  freeze: "p_congelar",
+  letter: "p_letra",
+  category: "p_categoria",
+  double: "p_dobro",
 };
 
 export const DEFAULT_LIVE_SETTINGS: Omit<LiveSettings, "cid"> = {
@@ -25,12 +47,17 @@ export const DEFAULT_LIVE_SETTINGS: Omit<LiveSettings, "cid"> = {
   volume: 60,
   background: "full",
   preview: false,
+  gifts: true,
+  giftNames: DEFAULT_GIFT_NAMES,
+  giftAmounts: DEFAULT_GIFT_AMOUNTS,
 };
 
 export const LIMITS = {
   roundSec: [10, 120],
   rounds: [1, 50],
   intermissionSec: [3, 30],
+  timeSec: [1, 15],
+  freezeSec: [2, 15],
 } as const;
 
 const clamp = (value: number, [min, max]: readonly [number, number], fallback: number) =>
@@ -69,6 +96,25 @@ export const settingsFromSearch = (cid: string, search: URLSearchParams): LiveSe
     volume: clamp(Number(search.get("volume") ?? NaN), [0, 100], DEFAULT_LIVE_SETTINGS.volume),
     background: search.get("fundo") === "transparente" ? "transparent" : "full",
     preview: search.get("previa") === "1",
+    gifts: search.get("presentes") !== "0",
+    giftNames: Object.fromEntries(
+      GIFT_EFFECTS.map((effect) => [
+        effect,
+        (search.get(GIFT_PARAM[effect]) ?? DEFAULT_GIFT_NAMES[effect]).trim().slice(0, 40),
+      ]),
+    ) as Record<GiftEffect, string>,
+    giftAmounts: {
+      timeSec: clamp(
+        Number(search.get("seg_tempo") ?? NaN),
+        LIMITS.timeSec,
+        DEFAULT_GIFT_AMOUNTS.timeSec,
+      ),
+      freezeSec: clamp(
+        Number(search.get("seg_congelar") ?? NaN),
+        LIMITS.freezeSec,
+        DEFAULT_GIFT_AMOUNTS.freezeSec,
+      ),
+    },
   };
 };
 
@@ -88,6 +134,17 @@ export const overlayPath = (settings: LiveSettings): string => {
   else if (settings.volume !== defaults.volume) params.set("volume", String(settings.volume));
   if (settings.background === "transparent") params.set("fundo", "transparente");
   if (settings.preview) params.set("previa", "1");
+  if (!settings.gifts) params.set("presentes", "0");
+  else {
+    for (const effect of GIFT_EFFECTS) {
+      if (settings.giftNames[effect] !== DEFAULT_GIFT_NAMES[effect])
+        params.set(GIFT_PARAM[effect], settings.giftNames[effect]);
+    }
+    if (settings.giftAmounts.timeSec !== DEFAULT_GIFT_AMOUNTS.timeSec)
+      params.set("seg_tempo", String(settings.giftAmounts.timeSec));
+    if (settings.giftAmounts.freezeSec !== DEFAULT_GIFT_AMOUNTS.freezeSec)
+      params.set("seg_congelar", String(settings.giftAmounts.freezeSec));
+  }
   const query = params.toString();
   return `/live/${settings.cid}${query ? `?${query}` : ""}`;
 };

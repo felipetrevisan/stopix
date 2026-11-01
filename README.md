@@ -89,6 +89,29 @@ top 5, entra um aviso “fulano passou beltrano · 3º”.
 
 No OBS/Streamlabs, “Interagir” na fonte mostra os mesmos botões (passe o mouse no rodapé).
 
+### Presentes mexendo no jogo
+
+Ao lado da letra fica a lista de presentes da rodada (ícone, quantos chegaram e o efeito).
+Cada efeito é ligado a um presente pelo nome, no painel `/live`:
+
+| Efeito | Padrão | O que faz |
+|---|---|---|
+| Mais tempo | Rose | +3 s por presente (combo de 5 = +15 s), até 2 min no relógio |
+| Congelar | Perfume | para o relógio 5 s por presente (até 30 s de uma vez) |
+| Troca letra | Doughnut | sorteia outra letra na mesma categoria; quem já respondeu pode responder de novo |
+| Troca categoria | Hand Hearts | sorteia outra categoria e letra |
+| Dobro de pontos | Galaxy | respostas valem o dobro até o fim da rodada |
+
+Os pontos já ganhos ficam. Depois de uma troca sobram pelo menos 15 s para responder.
+Presente que chega fora da rodada (sorteio, resultado, intervalo) vale quando a próxima
+começa. No combo do TikTok cada presente conta na hora, sem esperar o combo acabar; troca
+de letra e categoria valem uma vez por combo. As imagens dos presentes vêm do catálogo do
+canal no Neon (`channels/{código}/gifts`); presente que ainda não apareceu na live mostra
+um ícone do efeito.
+
+Opções na URL: `presentes=0` desliga; `p_tempo`, `p_congelar`, `p_letra`, `p_categoria`,
+`p_dobro` trocam o presente; `seg_tempo` e `seg_congelar` mudam os segundos.
+
 ### Páginas
 
 - `/live`: painel do streamer. Cola um link de overlay do Neon, escolhe tempo, rodadas,

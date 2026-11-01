@@ -27,13 +27,13 @@ body {
 }
 
 @layer components {
-  /* Palco: azul profundo com brilho verde-água em cima e roxo embaixo. */
+  /* Palco: roxo vibrante descendo para azul, com brilho verde-água. */
   .stage-bg {
     background:
-      radial-gradient(70% 38% at 85% 0%, rgb(45 212 191 / 0.32), transparent 70%),
-      radial-gradient(80% 45% at 0% 100%, rgb(139 92 246 / 0.45), transparent 70%),
-      radial-gradient(60% 40% at 100% 70%, rgb(59 130 246 / 0.3), transparent 70%),
-      linear-gradient(180deg, #0b1140 0%, #101a5c 45%, #1b1466 100%);
+      radial-gradient(70% 35% at 50% 0%, rgb(45 212 191 / 0.28), transparent 70%),
+      radial-gradient(80% 45% at 100% 100%, rgb(59 130 246 / 0.5), transparent 70%),
+      radial-gradient(70% 40% at 0% 65%, rgb(168 85 247 / 0.45), transparent 70%),
+      linear-gradient(180deg, #3a1792 0%, #4c1d95 38%, #2b2a9c 72%, #1e3a8a 100%);
   }
 
   /* Grade de pontos por cima do fundo. */
@@ -107,6 +107,62 @@ body {
   .bar-fill {
     background: linear-gradient(90deg, #2dd4bf, #3b82f6, #8b5cf6);
     box-shadow: 0 0 14px rgb(45 212 191 / 0.55);
+  }
+
+  /* Estilo "programa de auditório" do overlay da live: contorno escuro e sombra embaixo. */
+  .game-text {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 5px #120a3a;
+    text-shadow: 0 3px 0 #120a3a;
+  }
+
+  .game-text-sm {
+    font-weight: 900;
+    text-transform: uppercase;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 3px #120a3a;
+    text-shadow: 0 2px 0 #120a3a;
+  }
+
+  .chunky {
+    background: linear-gradient(180deg, #25186a 0%, #1a1150 100%);
+    border: 3px solid #120a3a;
+    box-shadow:
+      0 5px 0 #120a3a,
+      inset 0 0 0 2px rgb(94 234 212 / 0.35);
+  }
+
+  .chunky-tile {
+    background: linear-gradient(160deg, #5eead4 0%, #2dd4bf 22%, #3b82f6 62%, #8b5cf6 100%);
+    border: 5px solid #120a3a;
+    box-shadow:
+      0 8px 0 #120a3a,
+      inset 0 6px 0 rgb(255 255 255 / 0.45),
+      inset 0 -12px 0 rgb(40 20 120 / 0.35);
+  }
+
+  .chunky-pill {
+    background: linear-gradient(180deg, #5eead4 0%, #2dd4bf 40%, #3b82f6 100%);
+    border: 4px solid #120a3a;
+    box-shadow:
+      0 4px 0 #120a3a,
+      inset 0 3px 0 rgb(255 255 255 / 0.4);
+  }
+
+  .card-light {
+    background: linear-gradient(180deg, #ffffff 0%, #e8e6ff 100%);
+    border: 2.5px solid #120a3a;
+    box-shadow: 0 3px 0 #120a3a;
+  }
+
+  .card-first {
+    background: linear-gradient(180deg, #ccfbf1 0%, #5eead4 100%);
+    box-shadow:
+      0 3px 0 #120a3a,
+      0 0 18px rgb(45 212 191 / 0.8);
   }
 
   .bar-fill-hot {
