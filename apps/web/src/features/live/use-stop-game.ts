@@ -29,6 +29,7 @@ import {
   connectDemoChat,
   connectNeonChat,
 } from "./chat-source";
+import { canonicalGiftName, giftImage } from "./gift-catalog";
 import type { LiveSettings } from "./settings";
 
 const storageKey = (cid: string) => `stopix:live:${cid}`;
@@ -172,7 +173,8 @@ export function useStopGame(
       const current = stateRef.current;
       const { gifts, giftNames, giftAmounts } = settingsRef.current;
       if (!current || !gifts) return;
-      const effect = giftEffectFor(event.gift.name, giftNames);
+      const giftName = canonicalGiftName(event.gift.name);
+      const effect = giftEffectFor(giftName, giftNames);
       if (!effect) return;
       const result = applyGift(
         current,
@@ -188,8 +190,8 @@ export function useStopGame(
         kind: "gift",
         effect,
         player: { id: event.user.id, name: event.user.name, avatar: event.user.avatar },
-        giftName: event.gift.name,
-        image: event.gift.image,
+        giftName,
+        image: giftImage(giftName) ?? event.gift.image,
         count: event.count,
         queued: result.result === "queued",
       });

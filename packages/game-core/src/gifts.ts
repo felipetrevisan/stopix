@@ -23,7 +23,7 @@ export const DEFAULT_GIFT_NAMES: Record<GiftEffect, string> = {
   time: "Rose",
   freeze: "Perfume",
   letter: "Doughnut",
-  category: "Hand Hearts",
+  category: "Forever Rosa",
   double: "Galaxy",
 };
 

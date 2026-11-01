@@ -3,6 +3,7 @@
 import { GIFT_EFFECTS, type GiftAmounts, type GiftEffect } from "@stopix/game-core";
 import { motion } from "motion/react";
 import type { GiftCatalog } from "../chat-source";
+import { giftImage } from "../gift-catalog";
 
 export const EFFECT_EMOJI: Record<GiftEffect, string> = {
   time: "⏱️",
@@ -72,7 +73,7 @@ export function GiftLegend({
         return (
           <div key={effect} className="flex h-[43px] items-center gap-2">
             <span className="relative shrink-0">
-              <GiftIcon effect={effect} image={catalog[names[effect].toLowerCase()]} size={36} />
+              <GiftIcon effect={effect} image={giftImage(names[effect], catalog)} size={36} />
               <motion.span
                 key={count}
                 initial={{ scale: count ? 1.8 : 1 }}

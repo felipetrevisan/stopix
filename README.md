@@ -99,15 +99,16 @@ Cada efeito é ligado a um presente pelo nome, no painel `/live`:
 | Mais tempo | Rose | +3 s por presente (combo de 5 = +15 s), até 2 min no relógio |
 | Congelar | Perfume | para o relógio 5 s por presente (até 30 s de uma vez) |
 | Troca letra | Doughnut | sorteia outra letra na mesma categoria; quem já respondeu pode responder de novo |
-| Troca categoria | Hand Hearts | sorteia outra categoria e letra |
+| Troca categoria | Forever Rosa | sorteia outra categoria e letra |
 | Dobro de pontos | Galaxy | respostas valem o dobro até o fim da rodada |
 
 Os pontos já ganhos ficam. Depois de uma troca sobram pelo menos 15 s para responder.
 Presente que chega fora da rodada (sorteio, resultado, intervalo) vale quando a próxima
 começa. No combo do TikTok cada presente conta na hora, sem esperar o combo acabar; troca
-de letra e categoria valem uma vez por combo. As imagens dos presentes vêm do catálogo do
-canal no Neon (`channels/{código}/gifts`); presente que ainda não apareceu na live mostra
-um ícone do efeito.
+de letra e categoria valem uma vez por combo. As imagens dos presentes ficam em `apps/web/public/gifts` (85 presentes do TikTok,
+lista em `features/live/gift-catalog.ts`); no painel o streamer escolhe pela imagem. Um
+presente fora dessa lista pode ser escrito pelo nome e usa a imagem que o Neon já viu na
+live (`channels/{código}/gifts`).
 
 Opções na URL: `presentes=0` desliga; `p_tempo`, `p_congelar`, `p_letra`, `p_categoria`,
 `p_dobro` trocam o presente; `seg_tempo` e `seg_congelar` mudam os segundos.

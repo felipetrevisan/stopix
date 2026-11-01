@@ -26,7 +26,8 @@ import {
 import { loadGiftCatalog } from "../chat-source";
 import { playSampleSounds, setSoundVolume } from "../sounds";
 import { BrandMark } from "./brand-mark";
-import { GiftIcon, effectLabel } from "./gift-legend";
+import { EFFECT_EMOJI, effectLabel } from "./gift-legend";
+import { GiftPicker } from "./gift-picker";
 
 const STORAGE_KEY = "stopix:panel";
 const ALL_IDS = CATEGORIES.map((category) => category.id);
@@ -64,24 +65,6 @@ const EMPTY_FORM: Form = {
   timeSec: String(DEFAULT_GIFT_AMOUNTS.timeSec),
   freezeSec: String(DEFAULT_GIFT_AMOUNTS.freezeSec),
 };
-
-/** Presentes populares do TikTok, para sugerir no campo. */
-const POPULAR_GIFTS = [
-  "Rose",
-  "TikTok",
-  "Finger Heart",
-  "Perfume",
-  "Doughnut",
-  "Ice Cream Cone",
-  "Hand Hearts",
-  "Confetti",
-  "Sunglasses",
-  "Corgi",
-  "Money Gun",
-  "Galaxy",
-  "Lion",
-  "Universe",
-];
 
 const within = (value: string, [min, max]: readonly [number, number], fallback: number) => {
   const number = Math.round(Number(value));
@@ -374,39 +357,26 @@ export function Panel() {
           </Toggle>
           {form.gifts ? (
             <>
-              <datalist id="stopix-gifts">
-                {[...new Set([...catalog.map((gift) => gift.name), ...POPULAR_GIFTS])].map(
-                  (name) => (
-                    <option key={name} value={name} />
-                  ),
-                )}
-              </datalist>
               <div className="flex flex-col gap-2">
                 {GIFT_EFFECTS.map((effect) => {
                   const amounts = toSettings(form, "x").giftAmounts;
-                  const name = form.giftNames?.[effect] ?? "";
-                  const image = catalog.find(
-                    (gift) => gift.name.toLowerCase() === name.trim().toLowerCase(),
-                  )?.image;
+                  const name = form.giftNames?.[effect] ?? DEFAULT_GIFT_NAMES[effect];
+                  const label = effectLabel(effect, amounts);
                   return (
                     <div key={effect} className="flex items-center gap-3">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/5">
-                        <GiftIcon effect={effect} image={image} size={30} />
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/5 text-xl">
+                        {EFFECT_EMOJI[effect]}
                       </span>
-                      <span className="w-36 shrink-0 text-sm font-bold">
-                        {effectLabel(effect, amounts)}
-                      </span>
-                      <input
-                        className={cn(inputClass, "min-w-0 flex-1")}
-                        list="stopix-gifts"
+                      <span className="w-32 shrink-0 text-sm font-bold">{label}</span>
+                      <GiftPicker
                         value={name}
-                        placeholder={DEFAULT_GIFT_NAMES[effect]}
-                        aria-label={`Presente para ${effectLabel(effect, amounts)}`}
-                        onChange={(event) =>
-                          save({
-                            ...form,
-                            giftNames: { ...form.giftNames, [effect]: event.target.value },
-                          })
+                        label={label}
+                        liveGifts={catalog}
+                        taken={GIFT_EFFECTS.filter((other) => other !== effect).map(
+                          (other) => form.giftNames?.[other] ?? DEFAULT_GIFT_NAMES[other],
+                        )}
+                        onChange={(gift) =>
+                          save({ ...form, giftNames: { ...form.giftNames, [effect]: gift } })
                         }
                       />
                     </div>
@@ -438,10 +408,9 @@ export function Panel() {
                 </Field>
               </div>
               <p className="text-xs text-muted">
-                Escreva o nome do presente como aparece no TikTok (as sugestões mostram os que já
-                chegaram na sua live). Combo conta cada presente: 5 rosas = 5 vezes mais tempo.
-                Troca de letra e de categoria valem uma vez por combo. Presente que chega entre
-                rodadas vale quando a próxima começa.
+                Toque no presente para trocar. Combo conta cada presente: 5 rosas = 5 vezes mais
+                tempo. Troca de letra e de categoria valem uma vez por combo. Presente que chega
+                entre rodadas vale quando a próxima começa.
               </p>
             </>
           ) : null}
