@@ -26,7 +26,7 @@ function VoteButtons({
   const mine = room.me ? ballots?.[room.me] : undefined;
   if (playerId === room.me) {
     return (
-      <span className="flex items-center gap-2 text-[12px] font-bold text-white/60">
+      <span className="flex items-center gap-2 text-[12px] font-black text-[#5b4b8a]">
         <span className="flex items-center gap-0.5">
           <ThumbsUp className="size-3.5" />
           {tally.yes}
@@ -39,13 +39,13 @@ function VoteButtons({
     );
   }
   const button =
-    "flex h-8 items-center gap-1 rounded-xl px-2.5 text-[13px] font-black transition active:scale-95";
+    "flex h-8 items-center gap-1 rounded-xl border-[2.5px] border-[#120a3a] px-2.5 text-[13px] font-black shadow-[0_2px_0_#120a3a] transition active:translate-y-[2px]";
   return (
     <span className="flex gap-1.5">
       <button
         type="button"
         onClick={() => room.vote(playerId, categoryId, mine === true ? null : true)}
-        className={cn(button, mine === true ? "bg-aqua text-night" : "bg-white/10")}
+        className={cn(button, mine === true ? "bg-aqua text-[#120a3a]" : "bg-white text-[#120a3a]")}
         aria-label="Vale"
       >
         <ThumbsUp className="size-4" /> {tally.yes}
@@ -53,7 +53,7 @@ function VoteButtons({
       <button
         type="button"
         onClick={() => room.vote(playerId, categoryId, mine === false ? null : false)}
-        className={cn(button, mine === false ? "bg-hot text-white" : "bg-white/10")}
+        className={cn(button, mine === false ? "bg-hot text-white" : "bg-white text-[#120a3a]")}
         aria-label="Não vale"
       >
         <ThumbsDown className="size-4" /> {tally.no}
@@ -101,7 +101,7 @@ export function Review({ room }: { room: Room }) {
         const category = getCategory(id);
         return (
           <Card key={id} className="p-3">
-            <p className="mb-2 px-1 text-[13px] font-extrabold text-white/80">
+            <p className="game-text-sm mb-2 px-1 text-[15px] text-white">
               {category?.emoji} {category?.name}
             </p>
             <ul className="flex flex-col gap-1.5">
@@ -114,31 +114,31 @@ export function Review({ room }: { room: Room }) {
                     className={cn(
                       "flex min-h-11 items-center gap-2 rounded-2xl px-2 py-1",
                       check.status === "unknown"
-                        ? "bg-purple/20 ring-1 ring-purple/50"
-                        : "bg-white/[0.05]",
+                        ? "card-light border-purple bg-gradient-to-b from-[#f5f3ff] to-[#ddd6fe] text-[#120a3a]"
+                        : "card-light text-[#120a3a]",
                     )}
                   >
                     <PlayerAvatar player={player} size={28} />
                     <span className="min-w-0 flex-1">
                       <span
                         className={cn(
-                          "block truncate text-[16px] font-extrabold capitalize",
+                          "block truncate text-[16px] font-black capitalize",
                           (check.status === "invalid" || check.status === "empty") &&
                             "text-white/40 line-through",
                         )}
                       >
                         {check.word ?? (text || "—")}
                       </span>
-                      <span className="block truncate text-[11px] font-medium text-white/50">
+                      <span className="block truncate text-[11px] font-bold text-[#5b4b8a]">
                         {player.name}
                       </span>
                     </span>
                     {check.status === "valid" ? (
-                      <Check className="size-5 shrink-0 text-aqua-light" strokeWidth={3} />
+                      <Check className="size-6 shrink-0 text-[#0d9488]" strokeWidth={3.5} />
                     ) : check.status === "unknown" ? (
                       <VoteButtons room={room} playerId={player.id} categoryId={id} />
                     ) : (
-                      <X className="size-5 shrink-0 text-white/35" />
+                      <X className="size-5 shrink-0 text-[#120a3a]/35" strokeWidth={3} />
                     )}
                   </li>
                 );

@@ -3,7 +3,7 @@
 import { ArrowLeft, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { BrandLogo } from "@/features/live/components/brand-mark";
+import { BrandMark } from "@/features/live/components/brand-mark";
 import { AVATARS, type Profile, readProfile, saveProfile } from "../room";
 import { type Room, useRoom } from "../use-room";
 import { Lobby } from "./lobby";
@@ -16,7 +16,7 @@ import { Card, PrimaryButton } from "./ui";
 function Message({ title, text }: { title: string; text: string }) {
   return (
     <Card className="mt-10 flex flex-col items-center gap-3 text-center">
-      <p className="text-[22px] font-black">{title}</p>
+      <p className="game-text text-[26px] text-white">{title}</p>
       <p className="text-[15px] text-white/70">{text}</p>
       <Link href="/" className="mt-2 text-[15px] font-bold text-aqua-light underline">
         Voltar para o início
@@ -42,8 +42,8 @@ function JoinForm({ room, code }: { room: Room; code: string }) {
   };
   return (
     <Card className="mt-6 flex flex-col gap-4">
-      <p className="text-[22px] font-black">
-        Entrar na sala <span className="grad-text tracking-[0.15em]">{code}</span>
+      <p className="game-text text-[24px] text-white">
+        Entrar na sala <span className="tracking-[0.15em] text-aqua-light">{code}</span>
       </p>
       <ProfileForm profile={profile} onChange={setProfile} />
       <PrimaryButton onClick={join} disabled={!profile.name.trim() || busy}>
@@ -119,9 +119,10 @@ export function RoomScreen({ code }: { code: string }) {
         <header className="mb-4 flex items-center justify-between">
           <Link href="/" aria-label="Início" className="flex items-center gap-1 text-white/70">
             <ArrowLeft className="size-5" />
-            <BrandLogo size={28} textClass="text-[18px]" />
+            <BrandMark size={30} className="drop-shadow-[0_3px_0_#120a3a]" />
+            <span className="game-text-sm text-[20px] text-white italic">Stopix</span>
           </Link>
-          <span className="rounded-full bg-white/10 px-3 py-1 text-[13px] font-black tracking-[0.2em]">
+          <span className="rounded-full border-2 border-[#120a3a] bg-white px-3 py-0.5 text-[14px] font-black tracking-[0.2em] text-[#120a3a] shadow-[0_2px_0_#120a3a]">
             {code}
           </span>
         </header>

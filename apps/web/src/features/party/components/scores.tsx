@@ -26,12 +26,12 @@ function Standings({ room, deltas }: { room: Room; deltas?: Record<string, numbe
           <motion.li
             key={entry.playerId}
             layout
-            className="relative flex h-12 items-center gap-2.5 overflow-hidden rounded-2xl px-3"
+            className="relative flex h-12 items-center gap-2.5 overflow-hidden rounded-2xl border-[2.5px] border-[#120a3a] bg-[#120a3a]/40 px-3"
           >
             <motion.span
               className={cn(
                 "absolute inset-y-0 left-0 rounded-2xl",
-                index === 0 ? "grad-brand opacity-50" : "bg-white/[0.08]",
+                index === 0 ? "bg-gradient-to-r from-[#5eead4] to-[#3b82f6]" : "bg-white/[0.12]",
               )}
               initial={{ width: 0 }}
               animate={{ width: `${Math.max(10, (entry.points / max) * 100)}%` }}
@@ -39,18 +39,25 @@ function Standings({ room, deltas }: { room: Room; deltas?: Record<string, numbe
             <span
               className={cn(
                 "relative w-5 text-[17px] font-black",
-                index === 0 ? "text-aqua-light" : "text-white/55",
+                index === 0 ? "game-text-sm text-white" : "text-white/60",
               )}
             >
               {index + 1}
             </span>
-            <PlayerAvatar player={player} size={30} />
+            <span className="relative">
+              <PlayerAvatar player={player} size={30} />
+            </span>
             <span className="relative min-w-0 flex-1 truncate text-[15px] font-bold">
               {player?.name ?? "Saiu"}
               {entry.playerId === room.me ? <span className="text-white/45"> (você)</span> : null}
             </span>
             {deltas?.[entry.playerId] ? (
-              <span className="relative text-[13px] font-black text-aqua-light">
+              <span
+                className={cn(
+                  "relative text-[13px] font-black",
+                  index === 0 ? "text-[#120a3a]" : "text-aqua-light",
+                )}
+              >
                 +{deltas[entry.playerId]}
               </span>
             ) : null}
@@ -103,7 +110,7 @@ export function Scores({ room }: { room: Room }) {
         <Card>
           <div className="flex items-center justify-between">
             <Eyebrow>Seus pontos na rodada</Eyebrow>
-            <span className="grad-text text-[26px] font-black">+{mine.total}</span>
+            <span className="game-text text-[30px] text-aqua-light">+{mine.total}</span>
           </div>
           <ul className="mt-2 flex flex-col gap-1">
             {state.categories.map((id) => {
@@ -112,26 +119,26 @@ export function Scores({ room }: { room: Room }) {
               return (
                 <li
                   key={id}
-                  className="flex items-center gap-2 rounded-xl bg-white/[0.05] px-3 py-2 text-[14px]"
+                  className="card-light flex items-center gap-2 rounded-xl px-3 py-1.5 text-[14px] text-[#120a3a]"
                 >
                   <span className="w-6">{category?.emoji}</span>
                   <span
                     className={cn(
-                      "min-w-0 flex-1 truncate font-bold capitalize",
-                      !answer?.accepted && "text-white/40",
+                      "min-w-0 flex-1 truncate font-black capitalize",
+                      !answer?.accepted && "text-[#120a3a]/35",
                     )}
                   >
                     {answer?.word ?? (answer?.text || "—")}
                   </span>
                   {answer?.kind ? (
-                    <span className="text-[11px] font-bold text-white/50 uppercase">
+                    <span className="text-[10px] font-black text-[#5b4b8a] uppercase">
                       {KIND_LABEL[answer.kind]}
                     </span>
                   ) : null}
                   <span
                     className={cn(
                       "w-9 text-right font-black",
-                      answer?.points ? "text-aqua-light" : "text-white/35",
+                      answer?.points ? "text-[#0d9488]" : "text-[#120a3a]/35",
                     )}
                   >
                     {answer?.points ? `+${answer.points}` : "0"}
@@ -169,7 +176,7 @@ export function Final({ room }: { room: Room }) {
     <div className="relative flex flex-col items-center gap-4 pb-10">
       {champion ? <Confetti count={90} /> : null}
       <Eyebrow className="mt-6">Fim de partida</Eyebrow>
-      <span className="grad-text -mt-2 text-[56px] leading-none font-black tracking-tight italic">
+      <span className="game-text -mt-2 text-[58px] leading-none text-aqua-light italic">
         CAMPEÃO
       </span>
       {champion ? (
@@ -184,7 +191,7 @@ export function Final({ room }: { room: Room }) {
             <span className="absolute inset-[5px] rounded-full bg-deep" />
             <span className="relative text-[76px]">{champion.avatar}</span>
           </span>
-          <span className="mt-2 flex items-center gap-1.5 text-[30px] font-black">
+          <span className="game-text mt-2 flex items-center gap-1.5 text-[32px] text-white normal-case">
             <Crown className="size-6 text-aqua-light" /> {champion.name}
           </span>
           <span className="text-[16px] font-bold text-aqua-light">{ranking[0].points} pontos</span>

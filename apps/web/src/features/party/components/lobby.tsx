@@ -23,7 +23,7 @@ function Stepper({
   disabled: boolean;
 }) {
   const button =
-    "flex size-9 items-center justify-center rounded-xl bg-white/10 disabled:opacity-30";
+    "flex size-9 items-center justify-center rounded-xl border-[2.5px] border-[#120a3a] bg-white text-[#120a3a] shadow-[0_2px_0_#120a3a] disabled:opacity-30";
   return (
     <span className="flex items-center gap-2">
       <button
@@ -35,7 +35,9 @@ function Stepper({
       >
         <Minus className="size-4" />
       </button>
-      <span className="w-7 text-center text-[18px] font-black tabular-nums">{value}</span>
+      <span className="game-text-sm w-8 text-center text-[22px] text-white tabular-nums">
+        {value}
+      </span>
       <button
         type="button"
         className={button}
@@ -66,7 +68,9 @@ function Invite({ code }: { code: string }) {
     <Card className="flex items-center gap-4">
       <div className="flex-1">
         <Eyebrow>Código da sala</Eyebrow>
-        <p className="grad-text text-[44px] leading-none font-black tracking-[0.18em]">{code}</p>
+        <p className="game-text text-[48px] leading-none tracking-[0.16em] text-aqua-light">
+          {code}
+        </p>
       </div>
       <GhostButton onClick={share} className="shrink-0">
         {copied ? (
@@ -114,16 +118,18 @@ export function Lobby({ room, code }: { room: Room; code: string }) {
             <li
               key={player.id}
               className={cn(
-                "flex items-center gap-2 rounded-2xl bg-white/[0.06] px-2.5 py-2",
-                player.id === me && "ring-1 ring-aqua/60",
+                "card-light flex items-center gap-2 rounded-2xl px-2 py-1.5 text-[#120a3a]",
+                player.id === me && "card-first",
               )}
             >
               <PlayerAvatar player={player} size={34} />
               <span className="min-w-0 flex-1 truncate text-[14px] font-bold">
                 {player.name}
-                {player.id === me ? <span className="text-white/45"> (você)</span> : null}
+                {player.id === me ? <span className="text-[#120a3a]/50"> (você)</span> : null}
               </span>
-              {player.id === hostId ? <Crown className="size-4 shrink-0 text-aqua-light" /> : null}
+              {player.id === hostId ? (
+                <Crown className="size-4 shrink-0 text-purple" strokeWidth={3} />
+              ) : null}
             </li>
           ))}
         </ul>
@@ -149,7 +155,9 @@ export function Lobby({ room, code }: { room: Room; code: string }) {
                 aria-pressed={on}
                 className={cn(
                   "rounded-full px-3 py-1.5 text-[13px] font-bold transition",
-                  on ? "bg-blue/30 text-white ring-1 ring-blue" : "bg-white/5 text-white/50",
+                  on
+                    ? "border-[2.5px] border-[#120a3a] bg-aqua text-[#120a3a] shadow-[0_2px_0_#120a3a]"
+                    : "border-2 border-white/20 bg-[#120a3a]/40 text-white/60",
                   isHost && "active:scale-95",
                 )}
               >
@@ -160,7 +168,7 @@ export function Lobby({ room, code }: { room: Room; code: string }) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-[14px] font-bold">Rodadas</span>
+          <span className="game-text-sm text-[15px] text-white">Rodadas</span>
           <Stepper
             value={settings.rounds}
             min={PARTY_LIMITS.rounds[0]}
@@ -170,7 +178,7 @@ export function Lobby({ room, code }: { room: Room; code: string }) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-[14px] font-bold">Tempo por rodada</span>
+          <span className="game-text-sm text-[15px] text-white">Tempo por rodada</span>
           <div className="flex gap-1.5">
             {TIMES.map((sec) => (
               <button
@@ -181,8 +189,8 @@ export function Lobby({ room, code }: { room: Room; code: string }) {
                 className={cn(
                   "h-9 flex-1 rounded-xl text-[13px] font-bold transition",
                   settings.roundSec === sec
-                    ? "bg-aqua/25 text-white ring-1 ring-aqua"
-                    : "bg-white/5 text-white/60",
+                    ? "border-[2.5px] border-[#120a3a] bg-aqua text-[#120a3a] shadow-[0_2px_0_#120a3a]"
+                    : "border-2 border-white/20 bg-[#120a3a]/40 text-white/60",
                 )}
               >
                 {sec >= 60 && sec % 60 === 0

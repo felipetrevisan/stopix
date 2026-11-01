@@ -5,17 +5,12 @@ import { cn } from "@/lib/utils";
 import type { RoomPlayer } from "../room";
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <section className={cn("glass rounded-3xl p-4", className)}>{children}</section>;
+  return <section className={cn("chunky rounded-[24px] p-4", className)}>{children}</section>;
 }
 
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span
-      className={cn(
-        "text-[11px] font-extrabold tracking-[0.18em] text-aqua-light uppercase",
-        className,
-      )}
-    >
+    <span className={cn("game-text-sm text-[14px] tracking-wide text-aqua-light", className)}>
       {children}
     </span>
   );
@@ -30,7 +25,7 @@ export function PrimaryButton({
     <button
       type="button"
       className={cn(
-        "grad-brand flex h-12 items-center justify-center gap-2 rounded-2xl px-5 text-[16px] font-extrabold text-white shadow-[0_8px_24px_rgb(59_130_246_/_0.4)] transition active:scale-[0.98] disabled:opacity-40 disabled:shadow-none",
+        "chunky-pill game-text-sm flex h-13 items-center justify-center gap-2 rounded-2xl px-5 text-[18px] text-white transition active:translate-y-[3px] active:shadow-[0_1px_0_#120a3a] disabled:opacity-45 disabled:active:translate-y-0",
         className,
       )}
       {...props}
@@ -49,7 +44,7 @@ export function GhostButton({
     <button
       type="button"
       className={cn(
-        "flex h-11 items-center justify-center gap-2 rounded-2xl border border-white/15 px-4 text-[14px] font-bold text-white transition hover:bg-white/10 active:scale-[0.98] disabled:opacity-40",
+        "flex h-11 items-center justify-center gap-2 rounded-2xl border-[3px] border-[#120a3a] bg-white px-4 text-[14px] font-black text-[#120a3a] shadow-[0_3px_0_#120a3a] transition active:translate-y-[2px] active:shadow-[0_1px_0_#120a3a] disabled:opacity-45",
         className,
       )}
       {...props}
@@ -62,10 +57,18 @@ export function GhostButton({
 export function LetterTile({ letter, size = 56 }: { letter: string; size?: number }) {
   return (
     <span
-      className="letter-box flex shrink-0 items-center justify-center rounded-[30%]"
-      style={{ width: size, height: size }}
+      className="chunky-tile flex shrink-0 items-center justify-center rounded-[28%]"
+      style={{
+        width: size,
+        height: size,
+        borderWidth: Math.max(2.5, size / 26),
+        boxShadow: `0 ${Math.max(3, size / 20)}px 0 #120a3a, inset 0 ${Math.max(2, size / 28)}px 0 rgb(255 255 255 / 0.45)`,
+      }}
     >
-      <span className="letter-glyph leading-none" style={{ fontSize: size * 0.68 }}>
+      <span
+        className="game-text leading-none text-white"
+        style={{ fontSize: size * 0.7, WebkitTextStroke: `${Math.max(2.5, size / 26)}px #120a3a` }}
+      >
         {letter}
       </span>
     </span>
@@ -76,7 +79,7 @@ export function PlayerAvatar({ player, size = 36 }: { player?: RoomPlayer; size?
   return (
     <span
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full bg-white/10",
+        "flex shrink-0 items-center justify-center rounded-full border-[2.5px] border-[#120a3a] bg-gradient-to-b from-white to-[#e0e7ff]",
         player && !player.online && "opacity-40 grayscale",
       )}
       style={{ width: size, height: size, fontSize: size * 0.58 }}
@@ -91,7 +94,7 @@ export function TimerBar({ fraction, seconds }: { fraction: number; seconds: num
   const hot = clamped <= 0.2;
   return (
     <div className="flex items-center gap-2.5">
-      <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/10">
+      <div className="h-4 flex-1 overflow-hidden rounded-full border-[2.5px] border-[#120a3a] bg-[#120a3a]/60">
         <div
           className={cn("h-full rounded-full", hot ? "bar-fill-hot" : "bar-fill")}
           style={{ width: `${clamped * 100}%`, transition: "width 0.25s linear" }}
@@ -99,12 +102,12 @@ export function TimerBar({ fraction, seconds }: { fraction: number; seconds: num
       </div>
       <span
         className={cn(
-          "w-[46px] text-right text-[20px] font-black tabular-nums",
-          hot ? "text-hot" : "text-white",
+          "flex h-9 min-w-[58px] items-center justify-center rounded-full border-[3px] border-[#120a3a] px-2 text-[20px] font-black tabular-nums shadow-[0_3px_0_#120a3a]",
+          hot ? "animate-pulse bg-hot text-white" : "bg-white text-[#120a3a]",
         )}
       >
         {seconds}
-        <span className="text-[12px] text-white/60">s</span>
+        <span className="text-[12px]">s</span>
       </span>
     </div>
   );

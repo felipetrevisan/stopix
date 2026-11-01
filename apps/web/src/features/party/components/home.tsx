@@ -5,7 +5,7 @@ import { ArrowRight, Radio, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BrandLogo } from "@/features/live/components/brand-mark";
+import { BrandMark } from "@/features/live/components/brand-mark";
 import { firebaseConfigured } from "@/lib/firebase/client";
 import {
   AVATARS,
@@ -68,8 +68,11 @@ export function Home() {
     <main className="stage-bg min-h-dvh bg-fixed">
       <div className="mx-auto flex w-full max-w-lg flex-col gap-5 px-4 pt-8 pb-12">
         <header className="flex flex-col items-center gap-3 text-center">
-          <BrandLogo size={52} textClass="text-[40px]" />
-          <h1 className="text-[28px] leading-tight font-black tracking-tight">
+          <span className="flex items-center gap-2">
+            <BrandMark size={56} className="drop-shadow-[0_4px_0_#120a3a]" />
+            <span className="game-text text-[46px] text-white italic">Stopix</span>
+          </span>
+          <h1 className="game-text text-[27px] leading-tight text-white">
             O Stop (adedonha) para jogar online com os amigos
           </h1>
           <p className="text-[15px] text-white/70">
@@ -106,7 +109,7 @@ export function Home() {
               aria-label="Código da sala"
               maxLength={CODE_LENGTH}
               autoCapitalize="characters"
-              className="h-12 min-w-0 flex-1 rounded-2xl border border-white/15 bg-night/60 text-center text-[24px] font-black tracking-[0.4em] outline-none placeholder:text-[16px] placeholder:tracking-[0.2em] placeholder:text-white/30 focus-visible:border-aqua focus-visible:ring-2 focus-visible:ring-aqua/40"
+              className="h-12 min-w-0 flex-1 rounded-2xl text-center text-[24px] font-black tracking-[0.4em] placeholder:text-[16px] placeholder:tracking-[0.2em] border-[3px] border-[#120a3a] bg-white text-[#120a3a] shadow-[inset_0_3px_0_rgb(18_10_58_/_0.12)] outline-none placeholder:text-[#120a3a]/35 focus-visible:ring-4 focus-visible:ring-aqua/60"
             />
             <GhostButton type="submit" disabled={!isRoomCode(code)} className="h-12 px-5">
               Entrar <ArrowRight className="size-4" />
@@ -119,10 +122,10 @@ export function Home() {
           <Eyebrow>Como funciona</Eyebrow>
           <ol className="mt-3 grid grid-cols-2 gap-3">
             {STEPS.map(([icon, title, text]) => (
-              <li key={title} className="rounded-2xl bg-white/[0.05] p-3">
+              <li key={title} className="card-light rounded-2xl p-3 text-[#120a3a]">
                 <span className="text-[24px]">{icon}</span>
-                <p className="mt-1 text-[15px] font-extrabold">{title}</p>
-                <p className="text-[13px] leading-snug text-white/65">{text}</p>
+                <p className="mt-1 text-[15px] font-black">{title}</p>
+                <p className="text-[13px] leading-snug font-semibold text-[#3b2f6b]">{text}</p>
               </li>
             ))}
           </ol>
@@ -135,9 +138,9 @@ export function Home() {
 
         <Link
           href="/live"
-          className="glass flex items-center gap-3 rounded-3xl p-4 transition hover:bg-white/10"
+          className="chunky flex items-center gap-3 rounded-[24px] p-4 transition active:translate-y-[3px]"
         >
-          <span className="grad-brand flex size-11 items-center justify-center rounded-2xl">
+          <span className="chunky-pill flex size-11 items-center justify-center rounded-2xl">
             <Radio className="size-5" />
           </span>
           <span className="flex-1">
