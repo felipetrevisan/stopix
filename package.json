@@ -1,0 +1,23 @@
+{
+  "name": "stopix-monorepo",
+  "private": true,
+  "packageManager": "bun@1.3.9",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --filter=@stopix/web",
+    "build": "turbo run build",
+    "start": "bun run --cwd apps/web start",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "check": "turbo run typecheck test && bun run lint",
+    "lint": "biome lint --only=suspicious/noExplicitAny --only=correctness/noUnusedImports --only=correctness/noUnusedVariables --error-on-warnings apps packages",
+    "format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.4",
+    "turbo": "^2.5.6"
+  }
+}

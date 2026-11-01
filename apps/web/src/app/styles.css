@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Lilita One", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-body: "Nunito Variable", "Nunito", system-ui, sans-serif;
+
+  --color-ink: #1b0b3a;
+  --color-night: #12082a;
+  --color-grape: #2a0f5c;
+  --color-plum: #4b1aa8;
+  --color-violet: #7b2cf5;
+  --color-magenta: #e0309a;
+  --color-sun: #ffd23f;
+  --color-amber: #ff9f1c;
+  --color-lime: #34c759;
+  --color-stop: #e5262c;
+  --color-panel: #1a1035;
+  --color-panel-2: #241748;
+  --color-line: rgb(255 255 255 / 0.12);
+  --color-muted: #b8a9de;
+}
+
+html,
+body {
+  background: var(--color-night);
+  color: #fff;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  /* Texto "de jogo": contorno escuro e sombra embaixo, como letreiro. */
+  .game-text {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 4px var(--color-ink);
+    text-shadow: 0 3px 0 var(--color-ink);
+  }
+
+  .game-text-sm {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 2.5px var(--color-ink);
+    text-shadow: 0 2px 0 var(--color-ink);
+  }
+
+  /* Palco do overlay: fundo roxo com brilho rosa embaixo. */
+  .stage-bg {
+    background:
+      radial-gradient(90% 45% at 50% 0%, rgb(140 70 255 / 0.55), transparent 70%),
+      radial-gradient(80% 50% at 100% 100%, rgb(236 48 154 / 0.55), transparent 70%),
+      radial-gradient(70% 40% at 0% 70%, rgb(255 70 140 / 0.25), transparent 70%),
+      linear-gradient(180deg, #3d1592 0%, #5b1cae 40%, #8a1f9e 75%, #b02a7f 100%);
+  }
+
+  /* Moldura escura dos painéis do palco. */
+  .stage-panel {
+    background: linear-gradient(180deg, rgb(40 14 92 / 0.88), rgb(30 10 70 / 0.92));
+    border: 2.5px solid rgb(255 255 255 / 0.28);
+    box-shadow:
+      0 6px 0 rgb(15 4 40 / 0.55),
+      inset 0 1px 0 rgb(255 255 255 / 0.12);
+  }
+
+  /* Peça amarela da letra. */
+  .letter-tile {
+    background: linear-gradient(180deg, #fff27a 0%, #ffd23f 45%, #ffaa00 100%);
+    border: 5px solid #6b3200;
+    box-shadow:
+      0 8px 0 #6b3200,
+      inset 0 -10px 0 rgb(214 120 0 / 0.55),
+      inset 0 6px 0 rgb(255 255 255 / 0.55);
+  }
+
+  .letter-tile-sm {
+    background: linear-gradient(180deg, #fff27a 0%, #ffd23f 50%, #ffaa00 100%);
+    border: 2px solid #6b3200;
+    box-shadow: 0 2px 0 #6b3200;
+  }
+
+  .card-answer {
+    background: linear-gradient(180deg, #ffffff 0%, #ece4ff 100%);
+    border: 2px solid rgb(255 255 255 / 0.9);
+    box-shadow: 0 3px 0 rgb(30 8 70 / 0.45);
+  }
+
+  .card-answer-first {
+    background: linear-gradient(180deg, #fff7c2 0%, #ffd23f 100%);
+    border-color: #fff27a;
+    box-shadow:
+      0 3px 0 rgb(107 50 0 / 0.6),
+      0 0 18px rgb(255 210 63 / 0.75);
+  }
+
+  .pill-green {
+    background: linear-gradient(180deg, #5be07a 0%, #22a845 100%);
+    border: 2px solid #0f5c22;
+    box-shadow: 0 2px 0 #0f5c22;
+  }
+
+  .sunburst {
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgb(255 210 63 / 0.38) 0deg 9deg,
+      transparent 9deg 22.5deg
+    );
+    mask-image: radial-gradient(circle, #000 18%, transparent 68%);
+    animation: spin 18s linear infinite;
+  }
+
+  .bokeh {
+    position: absolute;
+    border-radius: 9999px;
+    border: 3px solid rgb(255 255 255 / 0.14);
+    animation: float 14s ease-in-out infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(14px, -22px, 0);
+  }
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 0.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sunburst,
+  .bokeh,
+  .animate-pulse-ring {
+    animation: none;
+  }
+}
