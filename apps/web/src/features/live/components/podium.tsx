@@ -69,7 +69,7 @@ export function Podium({ ranking }: { ranking: ScoreEntry[] }) {
       initial={{ y: 120, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 22 }}
-      className="chunky relative mx-3 rounded-[24px] px-2 pt-8 pb-2.5"
+      className="chunky chunky-see-through relative mx-3 rounded-[24px] px-2 pt-8 pb-2.5"
     >
       <div className="chunky-pill absolute -top-[17px] left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full px-4 py-0.5">
         <Trophy className="animate-bob size-4 text-[#120a3a]" strokeWidth={3} />

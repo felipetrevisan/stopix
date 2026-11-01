@@ -135,6 +135,11 @@ body {
       inset 0 0 0 2px rgb(94 234 212 / 0.35);
   }
 
+  /* Painel que deixa ver as ondas por trás (ranking do overlay). */
+  .chunky-see-through {
+    background: linear-gradient(180deg, rgb(37 24 106 / 0.72) 0%, rgb(26 17 80 / 0.8) 100%);
+  }
+
   .chunky-tile {
     background: linear-gradient(160deg, #5eead4 0%, #2dd4bf 22%, #3b82f6 62%, #8b5cf6 100%);
     border: 5px solid #120a3a;

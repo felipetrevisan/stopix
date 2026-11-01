@@ -212,7 +212,7 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
       {settings.background === "full" ? (
         <>
           <div className="stage-dots pointer-events-none absolute inset-0" aria-hidden />
-          <StageWaves />
+          <StageWaves variant="tall" />
         </>
       ) : null}
       <TopBar round={round.number} totalRounds={state.totalRounds} viewers={viewers} chat={chat} />
@@ -299,6 +299,8 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
       <div className="absolute inset-x-0 top-[722px]">
         <Podium ranking={board} />
       </div>
+
+      {settings.background === "full" ? <StageWaves variant="front" className="z-[15]" /> : null}
 
       <AnimatePresence>
         {phase === "stop" ? <StopScreen key="stop" answered={round.answers.length} /> : null}

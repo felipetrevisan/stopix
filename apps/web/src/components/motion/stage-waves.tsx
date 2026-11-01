@@ -2,20 +2,37 @@ import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 // Duas cristas por largura: andar metade da largura fecha o ciclo sem emenda.
-const wavePath = (height: number, amp: number) => {
-  const w = 1200;
+const wavePath = (height: number, amp: number, period: number) => {
   let d = `M0 ${amp}`;
-  for (let x = 0; x < w * 2; x += 300) {
-    d += ` Q ${x + 75} 0 ${x + 150} ${amp} T ${x + 300} ${amp}`;
+  for (let x = 0; x < 2400; x += period) {
+    d += ` Q ${x + period / 4} 0 ${x + period / 2} ${amp} T ${x + period} ${amp}`;
   }
   return `${d} V ${height} H 0 Z`;
 };
 
-const LAYERS = [
-  { color: "rgb(139 92 246 / 0.28)", height: 120, amp: 22, duration: 18, bottom: 0 },
-  { color: "rgb(59 130 246 / 0.28)", height: 96, amp: 18, duration: 13, bottom: 0 },
-  { color: "rgb(45 212 191 / 0.22)", height: 70, amp: 14, duration: 9, bottom: 0 },
+type Layer = { color: string; height: number; amp: number; period: number; duration: number };
+
+/** Fundo das telas do celular (modo amigos): ondas baixas e discretas. */
+const SOFT: Layer[] = [
+  { color: "rgb(139 92 246 / 0.28)", height: 120, amp: 22, period: 300, duration: 18 },
+  { color: "rgb(59 130 246 / 0.28)", height: 96, amp: 18, period: 300, duration: 13 },
+  { color: "rgb(45 212 191 / 0.22)", height: 70, amp: 14, period: 300, duration: 9 },
 ];
+
+/** Overlay da live: ondas altas, que aparecem em volta e por trás do ranking. */
+const TALL: Layer[] = [
+  { color: "rgb(139 92 246 / 0.42)", height: 330, amp: 34, period: 400, duration: 20 },
+  { color: "rgb(59 130 246 / 0.4)", height: 270, amp: 28, period: 300, duration: 14 },
+  { color: "rgb(45 212 191 / 0.34)", height: 210, amp: 24, period: 240, duration: 10 },
+];
+
+/** Faixa da frente, no pé da tela, passando por cima da borda de baixo do ranking. */
+const FRONT: Layer[] = [
+  { color: "rgb(59 130 246 / 0.55)", height: 58, amp: 16, period: 300, duration: 9 },
+  { color: "rgb(45 212 191 / 0.6)", height: 40, amp: 12, period: 240, duration: 6 },
+];
+
+const LAYERS = { soft: SOFT, tall: TALL, front: FRONT };
 
 const BUBBLES = [
   { left: "8%", size: 14, duration: 16, delay: 0 },
@@ -26,12 +43,14 @@ const BUBBLES = [
   { left: "92%", size: 7, duration: 11, delay: -7 },
 ];
 
-/** Ondas andando no pé da tela e bolhas subindo, atrás de tudo. */
+/** Ondas andando no pé da tela e (opcional) bolhas subindo. */
 export function StageWaves({
   className,
-  bubbles = true,
+  variant = "soft",
+  bubbles = variant !== "front",
 }: {
   className?: string;
+  variant?: keyof typeof LAYERS;
   bubbles?: boolean;
 }) {
   return (
@@ -56,20 +75,15 @@ export function StageWaves({
             />
           ))
         : null}
-      {LAYERS.map((layer) => (
+      {LAYERS[variant].map((layer) => (
         <svg
           key={layer.duration}
-          className="wave-layer absolute left-0"
-          style={{
-            bottom: layer.bottom,
-            width: "200%",
-            height: layer.height,
-            animationDuration: `${layer.duration}s`,
-          }}
+          className="wave-layer absolute bottom-0 left-0"
+          style={{ width: "200%", height: layer.height, animationDuration: `${layer.duration}s` }}
           viewBox={`0 0 2400 ${layer.height}`}
           preserveAspectRatio="none"
         >
-          <path d={wavePath(layer.height, layer.amp)} fill={layer.color} />
+          <path d={wavePath(layer.height, layer.amp, layer.period)} fill={layer.color} />
         </svg>
       ))}
     </div>
