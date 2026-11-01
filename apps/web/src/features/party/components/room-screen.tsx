@@ -71,8 +71,8 @@ export function RoomScreen({ code }: { code: string }) {
   if (room.status === "not-configured") {
     body = (
       <Message
-        title="Modo online desligado"
-        text="Este site ainda não tem o Firebase configurado."
+        title="Salas indisponíveis"
+        text="As salas online estão indisponíveis no momento. Tente de novo daqui a pouco."
       />
     );
   } else if (room.status === "not-found") {

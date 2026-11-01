@@ -8,7 +8,7 @@ import { BrandLogo } from "./brand-mark";
 const STATUS_LABEL: Partial<Record<ChatStatus, string>> = {
   connecting: "Conectando ao chat…",
   offline: "Chat desconectado",
-  "not-configured": "Neon não configurado",
+  "not-configured": "Chat indisponível",
 };
 
 /** Bolinhas das rodadas (até 12); acima disso, "3/20". */

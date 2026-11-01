@@ -79,7 +79,7 @@ export function Home() {
 
         {firebaseConfigured ? null : (
           <p className="rounded-2xl bg-hot/20 px-4 py-3 text-[14px] font-bold text-white">
-            O modo online ainda não foi configurado neste site (variáveis NEXT_PUBLIC_FIREBASE_*).
+            As salas online estão indisponíveis no momento. Tente de novo daqui a pouco.
           </p>
         )}
 

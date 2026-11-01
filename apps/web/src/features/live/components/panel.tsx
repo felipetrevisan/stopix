@@ -211,7 +211,7 @@ export function Panel() {
               className={inputClass}
               value={form.channel}
               onChange={update("channel")}
-              placeholder="https://…/overlay/SEU_CODIGO/alerts"
+              placeholder="Cole aqui o link do overlay"
               spellCheck={false}
             />
           </Field>
