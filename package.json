@@ -14,10 +14,12 @@
     "test": "turbo run test",
     "check": "turbo run typecheck test && bun run lint",
     "lint": "biome lint --only=suspicious/noExplicitAny --only=correctness/noUnusedImports --only=correctness/noUnusedVariables --error-on-warnings apps packages",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "emulators": "firebase emulators:start --only database,auth --project demo-stopix"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.4",
+    "firebase-tools": "^15.34.0",
     "turbo": "^2.5.6"
   }
 }

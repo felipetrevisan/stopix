@@ -2,6 +2,7 @@
 
 import { CATEGORIES, COMMAND_PREFIX, POINTS } from "@stopix/game-core";
 import { Check, Copy, ExternalLink, Volume2 } from "lucide-react";
+import Link from "next/link";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -192,6 +193,12 @@ export function Panel() {
               Stop (adedonha) com o chat da sua live: sorteia categoria e letra, quem acertar
               primeiro ganha mais pontos. Integrado ao Neon Live Labs.
             </p>
+            <Link
+              href="/"
+              className="mt-1 inline-block text-sm font-bold text-aqua-light underline"
+            >
+              ← Jogar com os amigos (modo online)
+            </Link>
           </div>
         </header>
 

@@ -1,5 +1,5 @@
-import { Panel } from "@/features/live/components/panel";
+import { Home } from "@/features/party/components/home";
 
 export default function HomePage() {
-  return <Panel />;
+  return <Home />;
 }

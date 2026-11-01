@@ -1,11 +1,55 @@
 # Stopix
 
-**Stop (adedonha) que o chat da live joga.** O overlay sorteia uma categoria e uma letra,
-o chat do TikTok/Twitch manda as respostas e quem acerta aparece na tela com a foto e
-ganha pontos. Integrado ao **Neon Live Labs** do mesmo jeito que o modo live do Sentrix:
-o overlay lê o chat em `channels/{código}/events` no Realtime Database do Neon.
+Stop (adedonha) em dois modos:
 
-## Como funciona uma rodada
+- **`/` — com os amigos, online.** Cria uma sala, manda o código de 4 letras e cada um
+  joga no seu celular. É o Stop clássico: sai uma letra, todo mundo preenche as
+  categorias, quem terminar primeiro pede **STOP!**, a turma vota nas palavras que não
+  estão nas listas e os pontos saem.
+- **`/live` — com o chat da live.** Overlay para TikTok LIVE Studio/OBS integrado ao
+  **Neon Live Labs** (o chat responde, quem acerta aparece com a foto). Veja
+  [Modo live](#modo-live).
+
+## Modo amigos
+
+1. O anfitrião cria a sala em `/` e escolhe categorias (3 a 10), rodadas e tempo.
+2. Os amigos entram com o código ou pelo link `/sala/{código}`.
+3. **Sorteio** da letra → **folha** com uma casa por categoria (o botão STOP só libera
+   com tudo preenchido; dá para ver quantas casas cada um já preencheu, não o que escreveu).
+4. **STOP!** (ou acaba o tempo) → **conferência**: palavra que está nas listas do Stopix
+   vale direto (acento, plural e um errinho passam); palavra fora da lista vai para
+   votação 👍/👎 e vale, a não ser que a maioria vote contra.
+5. **Pontos**: 10 se só você respondeu aquilo, 5 se repetiu, 20 se ninguém mais acertou
+   a categoria. Depois da última rodada, o campeão.
+
+Quem roda o relógio é o aparelho do anfitrião (não tem servidor próprio). Se ele sair, o
+jogador mais antigo que está online vira anfitrião em 5 segundos.
+
+### Firebase do modo amigos
+
+O modo amigos usa um projeto Firebase próprio do Stopix (não é o do Neon):
+
+1. No [console do Firebase](https://console.firebase.google.com), crie um projeto (ou use
+   um que já tenha).
+2. **Realtime Database** → Criar banco de dados.
+3. **Authentication** → Método de login → ative **Anônimo**.
+4. Publique as regras de `firebase/database.rules.json` (cole em Realtime Database →
+   Regras, ou `bunx firebase deploy --only database --project SEU_PROJETO`).
+5. Configurações do projeto → Seus apps → app da Web → copie a configuração para as
+   variáveis `NEXT_PUBLIC_FIREBASE_API_KEY`, `_AUTH_DOMAIN`, `_DATABASE_URL`, `_PROJECT_ID`
+   e `_APP_ID` (na Vercel e no `apps/web/.env.local`).
+
+As salas ficam em `rooms/{código}`; as regras só deixam cada um escrever o próprio
+nome, as próprias respostas (durante a rodada) e os próprios votos, e só o anfitrião
+mexe no estado do jogo.
+
+Local, sem projeto: `bun run emulators` (precisa de Java) e, no `.env.local`,
+`NEXT_PUBLIC_FIREBASE_EMULATOR=1`, `NEXT_PUBLIC_FIREBASE_DATABASE_URL="http://127.0.0.1:9000?ns=demo-stopix"`
+e `NEXT_PUBLIC_FIREBASE_PROJECT_ID="demo-stopix"` (as outras podem ser qualquer coisa).
+
+## Modo live
+
+### Como funciona uma rodada
 
 1. **Sorteando** (3 s): a categoria aparece no cartão principal e as letras correm na caixa.
 2. **Valendo** (30 s por padrão): “Mande no chat uma fruta que comece com G”. A barra do
@@ -21,7 +65,7 @@ final, e uma partida nova começa sozinha.
 Visual: fundo azul-escuro com brilhos verde-água e roxo, painéis de vidro, fonte Rubik.
 Nada de pódio de coroa ou placa de trânsito: a identidade é o cronômetro em degradê.
 
-### Pontos
+#### Pontos
 
 | Resposta | Pontos |
 |---|---|
@@ -35,7 +79,7 @@ acento, maiúscula, hífen ou espaço, plural (“goiabas”, “limões”), ar
 goiaba”) e um erro de digitação em palavras de 6+ letras passam. Quando alguém sobe no
 top 5, entra um aviso “fulano passou beltrano · 3º”.
 
-### Comandos (moderadores da live e os @ liberados no painel)
+#### Comandos (moderadores da live e os @ liberados no painel)
 
 | Chat | O que faz |
 |---|---|
@@ -45,9 +89,9 @@ top 5, entra um aviso “fulano passou beltrano · 3º”.
 
 No OBS/Streamlabs, “Interagir” na fonte mostra os mesmos botões (passe o mouse no rodapé).
 
-## Páginas
+### Páginas
 
-- `/`: painel do streamer. Cola um link de overlay do Neon, escolhe tempo, rodadas,
+- `/live`: painel do streamer. Cola um link de overlay do Neon, escolhe tempo, rodadas,
   categorias, sons e fundo, e copia o link do overlay. Tem prévia com chat simulado.
 - `/live/{código do canal}`: o overlay (fonte de navegador **1080 × 1920**, vertical).
   O palco tem 540 × 960 e escala para caber na fonte.
@@ -61,33 +105,29 @@ retoma a mesma partida.
 
 ## Versão mobile?
 
-**Não vale a pena agora.** No Sentrix o app faz sentido porque cada pessoa joga sozinha
-no celular. No Stopix quem joga é o chat: o espectador só comenta na live pelo próprio app
-do TikTok, e quem roda o jogo é o streamer, no LIVE Studio/OBS do PC. Um app nativo não
-acrescentaria nada para nenhum dos dois.
-
-O que já cobre o celular: o painel funciona no navegador do celular, e o overlay também
-(quem faz live pelo celular pode abrir `/live/{código}` no navegador e transmitir a tela).
-Se um dia tiver modo solo (jogar Stop contra o relógio) ou multiplayer entre amigos, aí um
-app no estilo do Sentrix volta a fazer sentido.
+O modo amigos já foi feito para o navegador do celular (uma coluna, teclado, botão de
+STOP fixo embaixo), então dá para jogar sem instalar nada: basta mandar o link. Um app
+nativo (Expo, como o do Sentrix) passa a valer a pena se quiserem notificação de
+"sua vez"/convite, presença nas lojas ou jogar com a tela bloqueando menos.
 
 ## Stack
 
 - `bun` workspaces + `turbo` + `biome` (igual ao Sentrix)
-- `apps/web`: `next@16`, `react@19`, `tailwindcss@4`, `motion`, Firebase (só o Realtime
-  Database do Neon, no navegador). Fonte Rubik (`@fontsource-variable/rubik`).
+- `apps/web`: `next@16`, `react@19`, `tailwindcss@4`, `motion`, Firebase (Realtime
+  Database do Stopix para as salas e o do Neon para o chat da live). Fonte Rubik (`@fontsource-variable/rubik`).
 - `packages/game-core`: regras puras e testadas: listas de palavras, conferência das
   respostas, sorteio, pontos, fases e comandos.
 - Sons sintetizados com Web Audio (sem arquivos).
 
-Não tem servidor nem banco próprio: o jogo inteiro roda no overlay.
+Sem servidor próprio: o modo live roda no overlay e o modo amigos no aparelho do
+anfitrião, com o Firebase só guardando a sala.
 
 ## Rodar local
 
 ```bash
 bun install
-cp apps/web/.env.example apps/web/.env.local   # NEXT_PUBLIC_NEON_FIREBASE_* (os mesmos do Sentrix)
-bun run dev                                     # http://localhost:3000 e /live/demo
+cp apps/web/.env.example apps/web/.env.local   # NEXT_PUBLIC_FIREBASE_* e NEXT_PUBLIC_NEON_FIREBASE_*
+bun run dev                                     # http://localhost:3000, /live e /live/demo
 ```
 
 ```bash
