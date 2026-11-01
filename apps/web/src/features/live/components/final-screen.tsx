@@ -2,6 +2,7 @@
 
 import type { ScoreEntry } from "@stopix/game-core";
 import { motion } from "motion/react";
+import { WaveText } from "@/components/motion/wave-text";
 import { Confetti } from "./confetti";
 import { Leaderboard } from "./leaderboard";
 import { HaloAvatar } from "./results-screen";
@@ -20,9 +21,18 @@ export function FinalScreen({ ranking, seconds }: { ranking: ScoreEntry[]; secon
       <span className="text-[13px] font-extrabold tracking-[0.3em] text-aqua-light uppercase">
         Fim de partida
       </span>
-      <span className="game-text mt-1 text-[56px] leading-none text-aqua-light italic">
-        CAMPEÃO
-      </span>
+      <motion.span
+        initial={{ scale: 0.3, opacity: 0, rotate: -10 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 12 }}
+        className="mt-1"
+      >
+        <WaveText
+          text="CAMPEÃO"
+          className="game-text text-[56px] leading-none text-aqua-light italic"
+          amplitude={8}
+        />
+      </motion.span>
       {first ? (
         <motion.div
           initial={{ scale: 0.6, opacity: 0 }}

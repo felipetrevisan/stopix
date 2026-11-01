@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "motion/react";
+import { WaveText } from "@/components/motion/wave-text";
 import { CATEGORIES, PARTY_LIMITS, type PartySettings } from "@stopix/game-core";
 import { Check, Crown, Link2, Minus, Play, Plus, Share2 } from "lucide-react";
 import { useState } from "react";
@@ -68,8 +70,8 @@ function Invite({ code }: { code: string }) {
     <Card className="flex items-center gap-4">
       <div className="flex-1">
         <Eyebrow>Código da sala</Eyebrow>
-        <p className="game-text text-[48px] leading-none tracking-[0.16em] text-aqua-light">
-          {code}
+        <p className="leading-none tracking-[0.16em]">
+          <WaveText text={code} className="game-text text-[48px] text-aqua-light" amplitude={5} />
         </p>
       </div>
       <GhostButton onClick={share} className="shrink-0">
@@ -114,9 +116,12 @@ export function Lobby({ room, code }: { room: Room; code: string }) {
           <span className="text-[12px] font-bold text-white/55">{online.length} online</span>
         </div>
         <ul className="grid grid-cols-2 gap-2">
-          {players.map((player) => (
-            <li
+          {players.map((player, index) => (
+            <motion.li
               key={player.id}
+              initial={{ scale: 0, rotate: -12 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 420, damping: 16, delay: index * 0.05 }}
               className={cn(
                 "card-light flex items-center gap-2 rounded-2xl px-2 py-1.5 text-[#120a3a]",
                 player.id === me && "card-first",
@@ -130,7 +135,7 @@ export function Lobby({ room, code }: { room: Room; code: string }) {
               {player.id === hostId ? (
                 <Crown className="size-4 shrink-0 text-purple" strokeWidth={3} />
               ) : null}
-            </li>
+            </motion.li>
           ))}
         </ul>
       </Card>

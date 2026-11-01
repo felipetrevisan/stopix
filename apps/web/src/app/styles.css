@@ -177,8 +177,136 @@ body {
   }
 }
 
+/* ---------------------------------------------------------------- movimento */
+
+/* Letras em onda: cada letra sobe e desce, uma depois da outra. */
+.wave-text > span {
+  display: inline-block;
+  animation: wave-letter 1.8s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.07s);
+}
+
+@keyframes wave-letter {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(var(--wave-amp, -5px));
+  }
+}
+
+/* Flutuar devagar (letra, selo da categoria, ícones). */
+.animate-bob {
+  animation: bob 3.2s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-1deg);
+  }
+}
+
+/* Brilho que passa por cima (faixa do pedido, primeira resposta). */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: -20% auto -20% -60%;
+  width: 40%;
+  transform: skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent);
+  animation: shine 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0%,
+  55% {
+    left: -60%;
+  }
+  85%,
+  100% {
+    left: 130%;
+  }
+}
+
+/* Brilho pulsando (1º lugar, botão de STOP liberado). */
+.glow-pulse {
+  animation: glow-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgb(45 212 191 / 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgb(45 212 191 / 0.9));
+  }
+}
+
+/* Ondas no pé da tela, andando para os lados. */
+.wave-layer {
+  animation: wave-x linear infinite;
+}
+
+@keyframes wave-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Bolhas subindo no fundo. */
+.bubble {
+  position: absolute;
+  bottom: -40px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, rgb(255 255 255 / 0.35), rgb(94 234 212 / 0.08));
+  border: 1.5px solid rgb(255 255 255 / 0.18);
+  animation: bubble-rise linear infinite;
+}
+
+@keyframes bubble-rise {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(18px, -50vh);
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-10px, -110vh);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ring-spin {
+  .ring-spin,
+  .wave-text > span,
+  .animate-bob,
+  .shine::after,
+  .glow-pulse,
+  .wave-layer,
+  .bubble {
     animation: none;
   }
 }

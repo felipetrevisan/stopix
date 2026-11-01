@@ -1,5 +1,6 @@
 "use client";
 
+import { StageWaves } from "@/components/motion/stage-waves";
 import { ArrowLeft, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -114,8 +115,9 @@ export function RoomScreen({ code }: { code: string }) {
   }
 
   return (
-    <main className="stage-bg min-h-dvh bg-fixed">
-      <div className="mx-auto w-full max-w-lg px-4 pt-4">
+    <main className="stage-bg relative min-h-dvh bg-fixed">
+      <StageWaves className="fixed" />
+      <div className="relative mx-auto w-full max-w-lg px-4 pt-4">
         <header className="mb-4 flex items-center justify-between">
           <Link href="/" aria-label="Início" className="flex items-center gap-1 text-white/70">
             <ArrowLeft className="size-5" />

@@ -2,6 +2,7 @@
 
 import type { RoundSummary } from "@stopix/game-core";
 import { motion } from "motion/react";
+import { WaveText } from "@/components/motion/wave-text";
 import { Avatar } from "./avatar";
 import { Confetti } from "./confetti";
 
@@ -39,9 +40,18 @@ export function ResultsScreen({ summary, round }: { summary: RoundSummary; round
       <span className="text-[13px] font-extrabold tracking-[0.3em] text-aqua-light uppercase">
         Rodada {round}
       </span>
-      <span className="game-text mt-1 text-[42px] leading-none text-white">
-        {winner ? "Quem levou" : "Ninguém acertou"}
-      </span>
+      <motion.span
+        initial={{ scale: 0.3, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 14 }}
+        className="mt-1"
+      >
+        <WaveText
+          text={winner ? "Quem levou" : "Ninguém acertou"}
+          className="game-text text-[42px] leading-none text-white"
+          amplitude={7}
+        />
+      </motion.span>
 
       <motion.div
         initial={{ y: 40, opacity: 0 }}

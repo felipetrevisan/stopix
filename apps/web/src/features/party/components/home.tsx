@@ -1,5 +1,7 @@
 "use client";
 
+import { WaveText } from "@/components/motion/wave-text";
+import { StageWaves } from "@/components/motion/stage-waves";
 import { PARTY_POINTS } from "@stopix/game-core";
 import { ArrowRight, Radio, Users } from "lucide-react";
 import Link from "next/link";
@@ -65,12 +67,17 @@ export function Home() {
   };
 
   return (
-    <main className="stage-bg min-h-dvh bg-fixed">
-      <div className="mx-auto flex w-full max-w-lg flex-col gap-5 px-4 pt-8 pb-12">
+    <main className="stage-bg relative min-h-dvh bg-fixed">
+      <StageWaves className="fixed" />
+      <div className="relative mx-auto flex w-full max-w-lg flex-col gap-5 px-4 pt-8 pb-12">
         <header className="flex flex-col items-center gap-3 text-center">
           <span className="flex items-center gap-2">
-            <BrandMark size={56} className="drop-shadow-[0_4px_0_#120a3a]" />
-            <span className="game-text text-[46px] text-white italic">Stopix</span>
+            <BrandMark size={56} className="animate-bob drop-shadow-[0_4px_0_#120a3a]" />
+            <WaveText
+              text="Stopix"
+              className="game-text text-[46px] text-white italic"
+              amplitude={6}
+            />
           </span>
           <h1 className="game-text text-[27px] leading-tight text-white">
             O Stop (adedonha) para jogar online com os amigos
@@ -118,7 +125,7 @@ export function Home() {
           {error ? <p className="text-[13px] font-bold text-hot">{error}</p> : null}
         </Card>
 
-        <Card>
+        <Card delay={0.15}>
           <Eyebrow>Como funciona</Eyebrow>
           <ol className="mt-3 grid grid-cols-2 gap-3">
             {STEPS.map(([icon, title, text]) => (

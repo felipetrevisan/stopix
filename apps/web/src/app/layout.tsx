@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import "@fontsource-variable/rubik/wght.css";
 import "@fontsource-variable/rubik/wght-italic.css";
 import "./styles.css";
+import { MotionProvider } from "@/components/motion/motion-provider";
 
 export const metadata: Metadata = {
   applicationName: "Stopix",
@@ -19,7 +20,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }

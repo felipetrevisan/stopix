@@ -81,7 +81,13 @@ export function LetterDial({
         />
       </svg>
 
-      <div className="absolute inset-0 flex items-center justify-center" style={{ height: SIZE }}>
+      <div
+        className={cn(
+          "absolute inset-0 flex items-center justify-center",
+          !spinning && !frozen && "animate-bob",
+        )}
+        style={{ height: SIZE }}
+      >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
             key={spinning ? `spin-${shown}` : `letter-${letter}`}

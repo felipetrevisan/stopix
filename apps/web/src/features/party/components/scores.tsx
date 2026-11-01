@@ -1,5 +1,6 @@
 "use client";
 
+import { WaveText } from "@/components/motion/wave-text";
 import { type ReviewedAnswer, getCategory, partyRanking } from "@stopix/game-core";
 import { ArrowRight, Crown, RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
@@ -99,7 +100,7 @@ export function Scores({ room }: { room: Room }) {
         </div>
       </Card>
 
-      <Card>
+      <Card delay={0.1}>
         <Eyebrow>Placar</Eyebrow>
         <div className="mt-3">
           <Standings room={room} deltas={deltas} />
@@ -107,7 +108,7 @@ export function Scores({ room }: { room: Room }) {
       </Card>
 
       {mine ? (
-        <Card>
+        <Card delay={0.2}>
           <div className="flex items-center justify-between">
             <Eyebrow>Seus pontos na rodada</Eyebrow>
             <span className="game-text text-[30px] text-aqua-light">+{mine.total}</span>
@@ -176,9 +177,18 @@ export function Final({ room }: { room: Room }) {
     <div className="relative flex flex-col items-center gap-4 pb-10">
       {champion ? <Confetti count={90} /> : null}
       <Eyebrow className="mt-6">Fim de partida</Eyebrow>
-      <span className="game-text -mt-2 text-[58px] leading-none text-aqua-light italic">
-        CAMPEÃO
-      </span>
+      <motion.span
+        initial={{ scale: 0.3, opacity: 0, rotate: -10 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 12 }}
+        className="-mt-2 leading-none"
+      >
+        <WaveText
+          text="CAMPEÃO"
+          className="game-text text-[58px] text-aqua-light italic"
+          amplitude={8}
+        />
+      </motion.span>
       {champion ? (
         <motion.div
           initial={{ scale: 0.5, opacity: 0 }}

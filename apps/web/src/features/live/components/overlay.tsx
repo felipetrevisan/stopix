@@ -26,6 +26,8 @@ import {
   setSoundVolume,
 } from "../sounds";
 import { type GameFeedEvent, useStopGame } from "../use-stop-game";
+import { StageWaves } from "@/components/motion/stage-waves";
+import { WaveText } from "@/components/motion/wave-text";
 import { AnswersGrid } from "./answers-grid";
 import { type Burst, EffectBurst } from "./effect-burst";
 import { FinalScreen } from "./final-screen";
@@ -208,7 +210,10 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
   return (
     <Stage transparent={settings.background === "transparent"}>
       {settings.background === "full" ? (
-        <div className="stage-dots pointer-events-none absolute inset-0" aria-hidden />
+        <>
+          <div className="stage-dots pointer-events-none absolute inset-0" aria-hidden />
+          <StageWaves />
+        </>
       ) : null}
       <TopBar round={round.number} totalRounds={state.totalRounds} viewers={viewers} chat={chat} />
 
@@ -216,13 +221,19 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
         <AnimatePresence mode="wait">
           <motion.div
             key={`${round.number}-${round.categoryId}`}
-            initial={{ y: -16, opacity: 0, scale: 0.8 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            className="chunky-pill flex items-center gap-2 rounded-full px-5 py-1"
+            initial={{ y: -40, opacity: 0, scale: 0.5, rotate: -8 }}
+            animate={{ y: 0, opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ y: 16, opacity: 0, scale: 0.8 }}
+            transition={{ type: "spring", stiffness: 380, damping: 16 }}
           >
-            <span className="text-[24px]">{category?.emoji}</span>
-            <span className="game-text-sm text-[26px] text-white">{category?.name}</span>
+            <div className="chunky-pill animate-bob flex items-center gap-2 rounded-full px-5 py-1">
+              <span className="text-[24px]">{category?.emoji}</span>
+              <WaveText
+                text={category?.name ?? ""}
+                className="game-text-sm text-[26px] text-white"
+                amplitude={4}
+              />
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -259,9 +270,15 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
       </div>
 
       <div className="absolute inset-x-0 top-[362px] flex justify-center">
-        <div className="chunky w-[512px] rounded-[20px] px-4 py-2 text-center">
+        <motion.div
+          key={`${round.number}-${round.categoryId}-${round.letter}-${prompt ?? "ask"}`}
+          initial={{ y: 30, opacity: 0, scaleX: 0.6 }}
+          animate={{ y: 0, opacity: 1, scaleX: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+          className="chunky shine w-[512px] rounded-[20px] px-4 py-2 text-center"
+        >
           {prompt ? (
-            <span className="game-text-sm text-[22px] text-white">{prompt}</span>
+            <WaveText text={prompt} className="game-text-sm text-[22px] text-white" amplitude={3} />
           ) : (
             <span className="game-text-sm text-[21px] leading-[1.25] text-white">
               Manda no chat {category?.ask} com a letra{" "}
@@ -270,7 +287,7 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
               </span>
             </span>
           )}
-        </div>
+        </motion.div>
       </div>
 
       <div className="absolute inset-x-0 top-[438px] h-[220px]">

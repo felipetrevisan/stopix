@@ -4,6 +4,7 @@ import type { Answer } from "@stopix/game-core";
 import { MessageCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { WaveText } from "@/components/motion/wave-text";
 import { Avatar } from "./avatar";
 
 export const VISIBLE_ANSWERS = 8;
@@ -18,21 +19,41 @@ function AnswerCard({ answer }: { answer: Answer }) {
   return (
     <motion.div
       layout
-      initial={{ scale: 0.5, opacity: 0, rotate: -4 }}
-      animate={{ scale: 1, opacity: 1, rotate: 0 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ type: "spring", stiffness: 520, damping: 28 }}
+      initial={{ x: 140, scale: 0.4, opacity: 0, rotate: 8 }}
+      animate={{ x: 0, scale: 1, opacity: 1, rotate: 0 }}
+      exit={{ opacity: 0, scale: 0.6, y: 20 }}
+      transition={{ type: "spring", stiffness: 420, damping: 18, mass: 0.8 }}
       className={cn(
-        "card-light flex h-[50px] items-center gap-1.5 rounded-[14px] pr-1.5 pl-1",
-        answer.kind === "first" && "card-first",
+        "card-light relative flex h-[50px] items-center gap-1.5 overflow-hidden rounded-[14px] pr-1.5 pl-1",
+        answer.kind === "first" && "card-first shine",
       )}
     >
-      <Avatar player={answer.player} size={38} className="border-[2.5px] border-[#120a3a]" />
+      {/* Clarão de quando a resposta chega. */}
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-white"
+        initial={{ opacity: 0.9 }}
+        animate={{ opacity: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      />
+      <motion.span
+        initial={{ scale: 0, rotate: -90 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.08 }}
+        className="relative"
+      >
+        <Avatar player={answer.player} size={38} className="border-[2.5px] border-[#120a3a]" />
+      </motion.span>
       <div className="min-w-0 flex-1 leading-none">
         <p className="truncate text-[10px] font-bold text-[#5b4b8a]">{answer.player.name}</p>
         <p className="truncate text-[18px] font-black text-[#1e1052] uppercase">{answer.word}</p>
       </div>
-      <span className="flex flex-col items-center leading-none">
+      <motion.span
+        initial={{ scale: 0, y: -10 }}
+        animate={{ scale: [0, 1.35, 1], y: 0 }}
+        transition={{ duration: 0.45, delay: 0.22 }}
+        className="relative flex flex-col items-center leading-none"
+      >
         {answer.kind === "repeated" ? (
           <span className="mb-0.5 text-[8px] font-black tracking-wide text-[#5b4b8a]">
             REPETIDA
@@ -46,7 +67,7 @@ function AnswerCard({ answer }: { answer: Answer }) {
         >
           +{answer.points}
         </span>
-      </span>
+      </motion.span>
     </motion.div>
   );
 }
@@ -57,8 +78,11 @@ export function AnswersGrid({ answers }: { answers: Answer[] }) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-1 pb-4">
         <div className="flex items-center gap-2">
-          <MessageCircle className="size-8 fill-white text-[#120a3a]" strokeWidth={2.5} />
-          <span className="game-text text-[30px] text-white">Comenta aí!</span>
+          <MessageCircle
+            className="animate-bob size-8 fill-white text-[#120a3a]"
+            strokeWidth={2.5}
+          />
+          <WaveText text="Comenta aí!" className="game-text text-[30px] text-white" amplitude={6} />
         </div>
         <span className="text-[14px] font-bold text-white/85">
           Quem acertar aparece aqui com a foto

@@ -1,6 +1,7 @@
 "use client";
 
 import { Users } from "lucide-react";
+import { motion } from "motion/react";
 import type { ChatStatus } from "../chat-source";
 import { BrandMark } from "./brand-mark";
 
@@ -24,9 +25,14 @@ export function TopBar({
 }) {
   const warning = STATUS_LABEL[chat];
   return (
-    <div className="absolute inset-x-0 top-0 flex h-[56px] items-center justify-between px-4">
+    <motion.div
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 260, damping: 22 }}
+      className="absolute inset-x-0 top-0 flex h-[56px] items-center justify-between px-4"
+    >
       <div className="flex items-center gap-2">
-        <BrandMark size={36} className="drop-shadow-[0_3px_0_#120a3a]" />
+        <BrandMark size={36} className="animate-bob drop-shadow-[0_3px_0_#120a3a]" />
         <span className="game-text-sm text-[22px] text-white italic">Stopix</span>
         <span className="rounded-full border-2 border-[#120a3a] bg-aqua px-2 text-[12px] font-black text-[#120a3a]">
           LIVE
@@ -48,6 +54,6 @@ export function TopBar({
           RODADA {round}/{totalRounds}
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }

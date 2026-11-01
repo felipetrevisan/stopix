@@ -97,10 +97,10 @@ export function Review({ room }: { room: Room }) {
         </div>
       </Card>
 
-      {state.categories.map((id) => {
+      {state.categories.map((id, index) => {
         const category = getCategory(id);
         return (
-          <Card key={id} className="p-3">
+          <Card key={id} className="p-3" delay={0.08 + index * 0.06}>
             <p className="game-text-sm mb-2 px-1 text-[15px] text-white">
               {category?.emoji} {category?.name}
             </p>

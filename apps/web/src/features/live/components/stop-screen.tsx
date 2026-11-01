@@ -2,6 +2,7 @@
 
 import { Hand } from "lucide-react";
 import { motion } from "motion/react";
+import { WaveText } from "@/components/motion/wave-text";
 
 /** Tempo esgotado: mão de "pare" num círculo pulsando e a conferência das respostas. */
 export function StopScreen({ answered }: { answered: number }) {
@@ -35,9 +36,13 @@ export function StopScreen({ answered }: { answered: number }) {
         initial={{ scale: 2.4, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 16, delay: 0.15 }}
-        className="game-text -mt-2 text-[96px] leading-none text-aqua-light italic"
+        className="-mt-2"
       >
-        STOP!
+        <WaveText
+          text="STOP!"
+          className="game-text text-[96px] leading-none text-aqua-light italic"
+          amplitude={10}
+        />
       </motion.span>
       <motion.span
         initial={{ opacity: 0 }}

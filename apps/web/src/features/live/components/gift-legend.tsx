@@ -67,13 +67,26 @@ export function GiftLegend({
   catalog: GiftCatalog;
 }) {
   return (
-    <div className="w-[196px] rounded-[22px] border-2 border-white/15 bg-[#120a3a]/75 px-2.5 py-2 backdrop-blur-sm">
-      {GIFT_EFFECTS.map((effect) => {
+    <motion.div
+      initial={{ x: 220, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 220, damping: 22 }}
+      className="w-[196px] rounded-[22px] border-2 border-white/15 bg-[#120a3a]/75 px-2.5 py-2 backdrop-blur-sm"
+    >
+      {GIFT_EFFECTS.map((effect, index) => {
         const count = counts[effect] ?? 0;
         return (
-          <div key={effect} className="flex h-[43px] items-center gap-2">
+          <motion.div
+            key={effect}
+            initial={{ x: 60, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.25 + index * 0.08 }}
+            className="flex h-[43px] items-center gap-2"
+          >
             <span className="relative shrink-0">
-              <GiftIcon effect={effect} image={giftImage(names[effect], catalog)} size={36} />
+              <span className="animate-bob block" style={{ animationDelay: `${index * -0.6}s` }}>
+                <GiftIcon effect={effect} image={giftImage(names[effect], catalog)} size={36} />
+              </span>
               <motion.span
                 key={count}
                 initial={{ scale: count ? 1.8 : 1 }}
@@ -91,9 +104,9 @@ export function GiftLegend({
                 {names[effect]}
               </span>
             </span>
-          </div>
+          </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }

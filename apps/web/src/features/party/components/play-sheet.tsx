@@ -1,5 +1,6 @@
 "use client";
 
+import { WaveText } from "@/components/motion/wave-text";
 import { getCategory, initialOf } from "@stopix/game-core";
 import { Hand } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -23,7 +24,11 @@ function Drawing() {
   return (
     <div className="flex flex-col items-center gap-5 py-16">
       <LetterTile letter={letter} size={170} />
-      <span className="game-text-sm animate-pulse text-[22px] text-white">Sorteando a letra…</span>
+      <WaveText
+        text="Sorteando a letra…"
+        className="game-text-sm text-[22px] text-white"
+        amplitude={5}
+      />
     </div>
   );
 }
@@ -44,7 +49,13 @@ function StopOverlay({ by }: { by: string | null }) {
       >
         <Hand className="size-[76px]" strokeWidth={2.2} />
       </motion.div>
-      <span className="game-text mt-3 text-[84px] leading-none text-aqua-light italic">STOP!</span>
+      <span className="mt-3 leading-none">
+        <WaveText
+          text="STOP!"
+          className="game-text text-[84px] text-aqua-light italic"
+          amplitude={10}
+        />
+      </span>
       <span className="game-text-sm mt-3 text-[20px] text-white">
         {by ? `${by} pediu STOP` : "Acabou o tempo!"}
       </span>
@@ -68,7 +79,9 @@ export function PlaySheet({ room }: { room: Room }) {
   return (
     <div className="flex flex-col gap-3 pb-28">
       <div className="chunky sticky top-2 z-20 flex items-center gap-3 rounded-[24px] p-3">
-        <LetterTile letter={state.letter} size={60} />
+        <span className="animate-bob">
+          <LetterTile letter={state.letter} size={60} />
+        </span>
         <div className="min-w-0 flex-1">
           <p className="text-[12px] font-bold text-white/60">
             Rodada {state.round}/{state.totalRounds} · tudo com{" "}
@@ -113,7 +126,17 @@ export function PlaySheet({ room }: { room: Room }) {
           const value = myAnswers[id] ?? "";
           const wrong = value.trim().length > 0 && initialOf(value) !== state.letter;
           return (
-            <li key={id}>
+            <motion.li
+              key={id}
+              initial={{ x: index % 2 ? 60 : -60, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 22,
+                delay: 0.1 + index * 0.06,
+              }}
+            >
               <label className="chunky flex items-center gap-3 rounded-[20px] px-3 py-2">
                 <span className="w-[92px] shrink-0 leading-tight">
                   <span className="text-[18px]">{category?.emoji}</span>
@@ -145,7 +168,7 @@ export function PlaySheet({ room }: { room: Room }) {
                   Tem que começar com {state.letter}
                 </p>
               ) : null}
-            </li>
+            </motion.li>
           );
         })}
       </ul>
@@ -159,7 +182,7 @@ export function PlaySheet({ room }: { room: Room }) {
             className={cn(
               "flex h-14 w-full items-center justify-center gap-2 rounded-2xl transition active:translate-y-[3px]",
               complete && !locked
-                ? "chunky-pill game-text-sm text-[24px] text-white italic"
+                ? "chunky-pill glow-pulse game-text-sm text-[24px] text-white italic"
                 : "border-[3px] border-[#120a3a] bg-[#120a3a]/70 text-[15px] font-bold text-white/70",
             )}
           >
