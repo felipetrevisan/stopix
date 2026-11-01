@@ -1,3 +1,4 @@
+import { ANIME_CHARACTERS, ANIMES, POKEMON } from "./anime";
 import { DISHES, DRINKS, FRUITS, SWEETS, VEGETABLES } from "./food";
 import { ANIMALS, FLOWERS } from "./nature";
 import { NAMES, JOBS } from "./people";
@@ -41,6 +42,9 @@ export const CATEGORIES: readonly Category[] = [
   CREATORS,
   PLAYERS,
   CELEBRITIES,
+  POKEMON,
+  ANIMES,
+  ANIME_CHARACTERS,
 ];
 
 const BY_ID = new Map(CATEGORIES.map((category) => [category.id, category]));

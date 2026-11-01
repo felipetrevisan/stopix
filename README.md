@@ -160,11 +160,12 @@ bun run build
 bun run format
 ```
 
-Categorias (30): frutas, animais, nomes, países, profissões, doces e sobremesas, comidas,
+Categorias (33): frutas, animais, nomes, países, profissões, doces e sobremesas, comidas,
 bebidas, objetos, partes do corpo, cores, cidades do Brasil, legumes e verduras, flores e
 plantas, esportes, instrumentos musicais, roupas e acessórios, jogos, filmes, séries,
-desenhos e animes, heróis e vilões, times de futebol, marcas, cantores e bandas,
-novelas, personagens, youtubers e streamers, jogadores de futebol e famosos. Em títulos, o artigo do começo não conta para a letra ("O Rei Leão" vale no R) e
+desenhos, heróis e vilões, times de futebol, marcas, cantores e bandas, novelas,
+personagens, youtubers e streamers, jogadores de futebol, famosos, Pokémon, animes e
+personagens de anime. Em títulos, o artigo do começo não conta para a letra ("O Rei Leão" vale no R) e
 número na resposta é ignorado ("GTA 5" vale como GTA).
 
 Para pôr palavras novas, edite os arquivos de `packages/game-core/src/categories`. Uma

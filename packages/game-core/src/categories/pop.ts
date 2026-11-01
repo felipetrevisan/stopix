@@ -108,9 +108,9 @@ export const SERIES: Category = {
 
 export const CARTOONS: Category = {
   id: "desenhos",
-  name: "Desenhos e animes",
+  name: "Desenhos",
   emoji: "🦄",
-  ask: "um desenho ou anime",
+  ask: "um desenho",
   words: words(`
     Avatar, Attack on Titan, Ataque dos Titãs, Apenas um Show, Aventuras de Gumball, Akira, As Meninas Superpoderosas, Alvin e os Esquilos, Animaniacs,
     Ben 10, Bob Esponja, Bluey, Batman, Bleach, Barney, Backyardigans, Beyblade, Boruto, Bananas de Pijama,
