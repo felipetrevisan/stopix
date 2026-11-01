@@ -20,7 +20,7 @@ export function Card({
       initial={{ y: 28, opacity: 0, scale: 0.96 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 22, delay }}
-      className={cn("chunky rounded-[24px] p-4", className)}
+      className={cn("chunky chunky-see-through rounded-[24px] p-4", className)}
     >
       {children}
     </motion.section>

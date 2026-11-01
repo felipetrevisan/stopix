@@ -12,11 +12,12 @@ const wavePath = (height: number, amp: number, period: number) => {
 
 type Layer = { color: string; height: number; amp: number; period: number; duration: number };
 
-/** Fundo das telas do celular (modo amigos): ondas baixas e discretas. */
+/** Fundo das telas do celular (modo amigos): ondas fortes, um pouco mais baixas que as da live. */
 const SOFT: Layer[] = [
-  { color: "rgb(139 92 246 / 0.28)", height: 120, amp: 22, period: 300, duration: 18 },
-  { color: "rgb(59 130 246 / 0.28)", height: 96, amp: 18, period: 300, duration: 13 },
-  { color: "rgb(45 212 191 / 0.22)", height: 70, amp: 14, period: 300, duration: 9 },
+  { color: "rgb(139 92 246 / 0.4)", height: 260, amp: 30, period: 400, duration: 20 },
+  { color: "rgb(59 130 246 / 0.38)", height: 205, amp: 24, period: 300, duration: 14 },
+  { color: "rgb(45 212 191 / 0.32)", height: 150, amp: 20, period: 240, duration: 10 },
+  { color: "rgb(45 212 191 / 0.45)", height: 64, amp: 14, period: 200, duration: 7 },
 ];
 
 /** Overlay da live: ondas altas, que aparecem em volta e por trás do ranking. */

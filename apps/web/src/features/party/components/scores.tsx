@@ -151,7 +151,7 @@ export function Scores({ room }: { room: Room }) {
         </Card>
       ) : null}
 
-      <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-night via-night/90 to-transparent px-4 pt-6 pb-[max(16px,env(safe-area-inset-bottom))]">
+      <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-[#120a3a]/80 via-[#120a3a]/35 to-transparent px-4 pt-6 pb-[max(16px,env(safe-area-inset-bottom))]">
         <div className="mx-auto max-w-lg">
           {room.isHost ? (
             <PrimaryButton onClick={room.next} className="h-14 w-full text-[17px]">

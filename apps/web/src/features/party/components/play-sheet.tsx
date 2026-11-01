@@ -78,7 +78,7 @@ export function PlaySheet({ room }: { room: Room }) {
 
   return (
     <div className="flex flex-col gap-3 pb-28">
-      <div className="chunky sticky top-2 z-20 flex items-center gap-3 rounded-[24px] p-3">
+      <div className="chunky chunky-see-through sticky top-2 z-20 flex items-center gap-3 rounded-[24px] p-3">
         <span className="animate-bob">
           <LetterTile letter={state.letter} size={60} />
         </span>
@@ -137,7 +137,7 @@ export function PlaySheet({ room }: { room: Room }) {
                 delay: 0.1 + index * 0.06,
               }}
             >
-              <label className="chunky flex items-center gap-3 rounded-[20px] px-3 py-2">
+              <label className="chunky chunky-see-through flex items-center gap-3 rounded-[20px] px-3 py-2">
                 <span className="w-[92px] shrink-0 leading-tight">
                   <span className="text-[18px]">{category?.emoji}</span>
                   <span className="block text-[12px] font-bold text-white/70">
@@ -173,7 +173,7 @@ export function PlaySheet({ room }: { room: Room }) {
         })}
       </ul>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-night via-night/90 to-transparent px-4 pt-6 pb-[max(16px,env(safe-area-inset-bottom))]">
+      <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-[#120a3a]/80 via-[#120a3a]/35 to-transparent px-4 pt-6 pb-[max(16px,env(safe-area-inset-bottom))]">
         <div className="mx-auto max-w-lg">
           <button
             type="button"
