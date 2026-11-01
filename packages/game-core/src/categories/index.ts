@@ -1,6 +1,7 @@
 import { DISHES, DRINKS, FRUITS, SWEETS, VEGETABLES } from "./food";
 import { ANIMALS, FLOWERS } from "./nature";
 import { NAMES, JOBS } from "./people";
+import { BRANDS, CARTOONS, GAMES, HEROES, MOVIES, MUSIC, SERIES, SOAPS, TEAMS } from "./pop";
 import { CITIES, COUNTRIES } from "./places";
 import { BODY, CLOTHES, COLORS, INSTRUMENTS, OBJECTS, SPORTS } from "./things";
 import type { Category } from "./types";
@@ -26,6 +27,15 @@ export const CATEGORIES: readonly Category[] = [
   SPORTS,
   INSTRUMENTS,
   CLOTHES,
+  GAMES,
+  MOVIES,
+  SERIES,
+  CARTOONS,
+  HEROES,
+  TEAMS,
+  BRANDS,
+  MUSIC,
+  SOAPS,
 ];
 
 const BY_ID = new Map(CATEGORIES.map((category) => [category.id, category]));

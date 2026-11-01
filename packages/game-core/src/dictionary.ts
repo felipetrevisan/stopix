@@ -5,6 +5,9 @@ import { initialOf, normalizeKey } from "./normalize";
 // espaço ("fruta do conde"), plural ("goiabas"), artigo na frente ("uma goiaba") e um
 // erro de digitação em palavras maiores ("graviloa"), desde que só uma palavra sirva.
 
+/** Artigo no começo não conta para a letra: "o rei leão" → "rei leão". */
+const LEADING_ARTICLE = /^(?:um|uma|uns|umas|o|a|os|as)\s+/i;
+
 type Entry = { key: string; word: string };
 type Index = { byKey: Map<string, string>; byLetter: Map<string, Entry[]> };
 
@@ -16,7 +19,8 @@ const indexOf = (category: Category): Index => {
   const byKey = new Map<string, string>();
   const byLetter = new Map<string, Entry[]>();
   for (const word of category.words) {
-    const key = normalizeKey(word);
+    // "O Rei Leão" vale na letra R, igual a quem manda "o rei leão" no chat.
+    const key = normalizeKey(word.replace(LEADING_ARTICLE, ""));
     if (!key || byKey.has(key)) continue;
     byKey.set(key, word);
     const letter = key.charAt(0).toUpperCase();
@@ -46,7 +50,7 @@ export const lettersWith = (categoryId: string, min: number): string[] => {
     .sort();
 };
 
-const ARTICLES = /^(?:um|uma|uns|umas|o|a|os|as|eh|e|é)\s+/i;
+const SAYING = /^(?:eh|e|é)\s+/i;
 
 /** Texto do chat → chave candidata. Nulo se não parece resposta (link, frase longa…). */
 export const answerKey = (text: string): string | null => {
@@ -54,9 +58,11 @@ export const answerKey = (text: string): string | null => {
     .trim()
     .replace(/[\p{Extended_Pictographic}‍️]/gu, "")
     .replace(/^[\p{P}\s]+|[\p{P}\s]+$/gu, "")
-    .replace(ARTICLES, "");
+    .replace(SAYING, "")
+    .replace(LEADING_ARTICLE, "");
   if (!clean || clean.length > 40 || clean.split(/\s+/).length > 5) return null;
-  if (/[@#/]|\d/.test(clean)) return null;
+  // Link e @ não são resposta; número passa ("GTA 5" vira "gta").
+  if (/[@#/]|https?:|www\./i.test(clean)) return null;
   const key = normalizeKey(clean);
   return key.length >= 2 ? key : null;
 };

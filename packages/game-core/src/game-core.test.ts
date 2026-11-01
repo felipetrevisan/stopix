@@ -227,3 +227,13 @@ describe("fases", () => {
     expect(restoreGame(null)).toBeNull();
   });
 });
+
+describe("cultura pop", () => {
+  test("artigo no começo não conta e número é ignorado", () => {
+    expect(matchAnswer("filmes", "R", "o rei leão")?.word).toBe("Rei Leão");
+    expect(matchAnswer("jogos", "G", "gta 5")?.word).toBe("GTA");
+    expect(matchAnswer("desenhos", "S", "os simpsons")?.word).toBe("Simpsons");
+    expect(matchAnswer("marcas", "M", "mcdonalds")?.word).toBe("McDonald's");
+    expect(matchAnswer("jogos", "G", "goiaba.com/123")).toBeNull();
+  });
+});
