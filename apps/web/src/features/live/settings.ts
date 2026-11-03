@@ -22,6 +22,8 @@ export type LiveSettings = GameOptions & {
   sound: boolean;
   volume: number;
   background: Background;
+  /** Ondas e bolhas se mexendo no fundo (desligar ajuda a live com pouca internet). */
+  waves: boolean;
   /** Esconde os botões de controle (prévia do painel). */
   preview: boolean;
   /** Presentes ligados a efeitos no jogo. */
@@ -46,6 +48,7 @@ export const DEFAULT_LIVE_SETTINGS: Omit<LiveSettings, "cid"> = {
   sound: true,
   volume: 60,
   background: "full",
+  waves: true,
   preview: false,
   gifts: true,
   giftNames: DEFAULT_GIFT_NAMES,
@@ -99,6 +102,7 @@ export const settingsFromSearch = (cid: string, search: URLSearchParams): LiveSe
     sound: search.get("sound") !== "0",
     volume: clamp(Number(search.get("volume") ?? NaN), [0, 100], DEFAULT_LIVE_SETTINGS.volume),
     background: search.get("background") === "transparent" ? "transparent" : "full",
+    waves: search.get("waves") !== "0",
     preview: search.get("preview") === "1",
     gifts: search.get("gifts") !== "0",
     giftNames: Object.fromEntries(
@@ -137,6 +141,7 @@ export const overlayPath = (settings: LiveSettings): string => {
   if (!settings.sound) params.set("sound", "0");
   else if (settings.volume !== defaults.volume) params.set("volume", String(settings.volume));
   if (settings.background === "transparent") params.set("background", "transparent");
+  if (!settings.waves) params.set("waves", "0");
   if (settings.preview) params.set("preview", "1");
   if (!settings.gifts) params.set("gifts", "0");
   else {

@@ -293,13 +293,13 @@ body {
     opacity: 1;
   }
   50% {
-    transform: translate(18px, -50vh);
+    transform: translate(18px, var(--rise-half, -50vh));
   }
   90% {
     opacity: 0.8;
   }
   100% {
-    transform: translate(-10px, -110vh);
+    transform: translate(-10px, var(--rise, -110vh));
     opacity: 0;
   }
 }

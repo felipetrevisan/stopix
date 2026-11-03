@@ -43,6 +43,7 @@ type Form = {
   sound: boolean;
   volume: string;
   background: Background;
+  waves: boolean;
   gifts: boolean;
   giftNames: Record<GiftEffect, string>;
   timeSec: string;
@@ -60,6 +61,7 @@ const EMPTY_FORM: Form = {
   sound: true,
   volume: String(DEFAULT_LIVE_SETTINGS.volume),
   background: "full",
+  waves: true,
   gifts: true,
   giftNames: DEFAULT_GIFT_NAMES,
   timeSec: String(DEFAULT_GIFT_AMOUNTS.timeSec),
@@ -90,6 +92,7 @@ const toSettings = (form: Form, cid: string): LiveSettings => ({
   sound: form.sound,
   volume: within(form.volume, [0, 100], DEFAULT_LIVE_SETTINGS.volume),
   background: form.background,
+  waves: form.waves !== false,
   gifts: form.gifts,
   giftNames: Object.fromEntries(
     GIFT_EFFECTS.map((effect) => [
@@ -464,6 +467,15 @@ export function Panel() {
           >
             Fundo transparente (para pôr o jogo por cima da câmera)
           </Toggle>
+          {form.background === "full" ? (
+            <Toggle
+              on={form.waves !== false}
+              onClick={() => save({ ...form, waves: form.waves === false })}
+            >
+              Fundo animado (ondas e bolhas). Se a live ficar pixelada, desligue: fundo parado gasta
+              menos internet na transmissão.
+            </Toggle>
+          ) : null}
         </Section>
 
         <Section title="6. Link do overlay">

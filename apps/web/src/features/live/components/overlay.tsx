@@ -10,7 +10,14 @@ import {
 } from "@stopix/game-core";
 import { Hand, RotateCcw, SkipForward } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@/lib/utils";
 import type { LiveSettings } from "../settings";
 import {
@@ -45,7 +52,9 @@ export const STAGE_HEIGHT = 960;
 
 /** Palco 9:16 de tamanho fixo, escalado para caber na fonte de navegador. */
 function Stage({ children, transparent }: { children: ReactNode; transparent: boolean }) {
-  const [scale, setScale] = useState(1);
+  // `zoom` (e não transform: scale) faz o navegador desenhar tudo no tamanho final da
+  // fonte (1080×1920): texto, bordas e animações ficam nítidos, sem esticar imagem.
+  const [scale, setScale] = useState<number | null>(null);
   useEffect(() => {
     const fit = () =>
       setScale(Math.min(window.innerWidth / STAGE_WIDTH, window.innerHeight / STAGE_HEIGHT));
@@ -54,14 +63,20 @@ function Stage({ children, transparent }: { children: ReactNode; transparent: bo
     return () => window.removeEventListener("resize", fit);
   }, []);
   return (
-    <div className="fixed inset-0 overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center overflow-hidden">
       <div
-        className={cn("absolute top-1/2 left-1/2 overflow-hidden", !transparent && "stage-bg")}
-        style={{
-          width: STAGE_WIDTH,
-          height: STAGE_HEIGHT,
-          transform: `translate(-50%, -50%) scale(${scale})`,
-        }}
+        className={cn("relative shrink-0 overflow-hidden", !transparent && "stage-bg")}
+        style={
+          {
+            width: STAGE_WIDTH,
+            height: STAGE_HEIGHT,
+            zoom: scale ?? 1,
+            visibility: scale ? "visible" : "hidden",
+            // Bolhas sobem a altura do palco (vh dentro do zoom seria o dobro).
+            "--rise": `-${STAGE_HEIGHT + 60}px`,
+            "--rise-half": `-${STAGE_HEIGHT / 2}px`,
+          } as CSSProperties
+        }
       >
         {children}
       </div>
@@ -212,7 +227,7 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
       {settings.background === "full" ? (
         <>
           <div className="stage-dots pointer-events-none absolute inset-0" aria-hidden />
-          <StageWaves variant="tall" />
+          {settings.waves ? <StageWaves variant="tall" /> : null}
         </>
       ) : null}
       <TopBar round={round.number} totalRounds={state.totalRounds} viewers={viewers} chat={chat} />
@@ -300,7 +315,9 @@ export function Overlay({ settings }: { settings: LiveSettings }) {
         <Podium ranking={board} />
       </div>
 
-      {settings.background === "full" ? <StageWaves variant="front" className="z-[15]" /> : null}
+      {settings.background === "full" && settings.waves ? (
+        <StageWaves variant="front" className="z-[15]" />
+      ) : null}
 
       <AnimatePresence>
         {phase === "stop" ? <StopScreen key="stop" answered={round.answers.length} /> : null}

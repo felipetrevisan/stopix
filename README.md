@@ -119,11 +119,13 @@ segundos.
 - `/live`: painel do streamer. Cola um link de overlay do Neon, escolhe tempo, rodadas,
   categorias, sons e fundo, e copia o link do overlay. Tem prévia com chat simulado.
 - `/live/{código do canal}`: o overlay (fonte de navegador **1080 × 1920**, vertical).
-  O palco tem 540 × 960 e escala para caber na fonte.
+  O palco tem 540 × 960 e é ampliado com `zoom` (não `transform: scale`), para o navegador
+  desenhar tudo no tamanho final e o texto ficar nítido.
 - `/live/demo`: overlay com chat simulado, para testar sem live.
 
 Opções na URL do overlay: `round_time`, `rounds`, `break`, `categories=fruits,animals`,
-`hard_letters=1`, `admins=@a,@b`, `sound=0`, `volume=0-100`, `background=transparent`.
+`hard_letters=1`, `admins=@a,@b`, `sound=0`, `volume=0-100`, `background=transparent`,
+`waves=0` (fundo parado).
 Os ids das categorias estão em `packages/game-core/src/categories` (campo `id`).
 
 O estado da partida fica no `localStorage` do navegador da live, então recarregar a fonte
